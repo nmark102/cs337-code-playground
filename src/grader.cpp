@@ -19,5 +19,6 @@ using namespace std;
 extern const string DEFAULT_GCC_ARGS;
 
 int main(int argc, char* argv[]) {
-    cout << system("python3 main.py") << endl;
+    const string cmd = "python3 main.py";
+    cout << system(cmd.c_str()) << endl;
 }
