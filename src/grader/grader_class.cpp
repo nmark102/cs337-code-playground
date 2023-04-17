@@ -4,6 +4,9 @@
 #include "utils.h"
 #endif
 
+extern const string DEFAULT_GCC_ARGS;
+extern const string DEFAULT_GPP_ARGS;
+
 class Grader {
     private:
     // Private variables
@@ -80,7 +83,30 @@ class Grader {
             }
         }
 
-        void execute() {
+        int compile() {
+            // Compile the submission
+            string compile_cmd;
+            // int compile_status = system(compile_cmd.c_str());
+
+            if (language == "c") {
+                compile_cmd = "gcc " + DEFAULT_GCC_ARGS + submission + " -o " + submission + ".out";
+            }
+            else if (language == "cpp") {
+                compile_cmd = "g++ " + DEFAULT_GPP_ARGS + submission + " -o " + submission + ".out";
+            }
+            else if (language == "java") {
+                compile_cmd = "javac " + submission;
+            }
+            // NOTE: Skip compilation step for python code
+            else if (language == "python3") {
+                return 0;
+            }
+            else {
+                cerr << "WARNING: Language \"" << language << "\" is not supported (for now). Skipping compilation step." << endl;
+            }
+        }
+
+        int execute() {
 
         }
 };
