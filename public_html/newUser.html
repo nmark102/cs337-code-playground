@@ -1,0 +1,38 @@
+<!DOCTYPE html>                                                                 
+<!--                                                                            
+Author(s): Angel Benavides, Mark Nguyen, Nishant Athawale                     
+Class: CS 337, Spring 2023                                                      
+File: index.html                                                                
+Assignment: Final Project - LeetCode Clone                                      
+Purpose: Create a webpage for new users to create an account to Coding website
+-->
+<html lang="en">                                                                
+<head>                                                                          
+  <meta charset="UTF-8">                                                        
+  <title>Create new Account </title>                                                          
+  <link id="cssFile" rel="stylesheet" type="text/css" href="./style/newUser.css">              
+  <script src="./newUser.js"></script>
+</head>                                                                         
+  <body>
+    <div id="header" class="box">
+    <h1>Welcome new User</h1>
+    </div>
+    <div id="info" class="box">
+      <h1><b>Enter information</b></h1> 
+
+      <label for="username">Username</label>                                    
+      <input type="text" id="username" name="username"><br><br>        
+      
+      <label for="primaryEmail">Primary email:</label>
+			<input type="email" name="primaryEmail"
+                 pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{3}" 
+								 id="primaryEmail" required><br><br>
+
+      <label for="password">Password</label>                                    
+      <input type="password" id="password" name="password" pattern=".{8,}" required><br><br>
+      
+      <input type='submit' value="Create" onclick="create()">                
+      <div id="error"></div><br><br>     
+    </div>
+  </body>                                                                         
+</html>                

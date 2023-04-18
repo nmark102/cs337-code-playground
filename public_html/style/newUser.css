@@ -1,0 +1,38 @@
+/*
+Author(s): Angel Benavides, Mark Nguyen, Nishant Athawale                       
+Class: CS 337, Spring 2023                                                      
+File: newUser.css                                                                
+Assignment: Final Project - LeetCode Clone                                      
+Purpose: Add style to the newUser.html page for website. 
+*/
+
+* {
+ box-sizing: border-box;
+}
+
+body {
+  margin: 0px;
+}
+
+.box {
+  position: fixed;                                                                 
+  border: 2px solid black;                                                         
+  padding: 10px;                                                                   
+  overflow-y: scroll;        
+}
+
+#header {
+  top: 0px;                                                                     
+  left: 0px;                                                                    
+  width: 100vw;                                                                 
+  height: 20vh;
+}
+
+#info {
+  top: 20vh;
+  left: 30vw;
+  width: 40vw;
+  height: 60vh;
+  text-align: center;
+  padding-top: 10vh;  
+}

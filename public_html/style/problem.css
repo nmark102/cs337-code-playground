@@ -1,0 +1,44 @@
+/*
+Author(s): Angel Benavides, Mark Nguyen, Nishant Athawale                       
+Class: CS 337, Spring 2023                                                      
+File: problem.css                                                                
+Assignment: Final Project - LeetCode Clone                                      
+Purpose: Add style to the problem.css page for website. 
+*/
+
+* {
+ box-sizing: border-box;
+}
+
+body {
+  margin: 0px;
+}
+
+.box {
+  position: fixed;                                                                 
+  border: 2px solid black;                                                         
+  padding: 10px;                                                                   
+  overflow-y: scroll;        
+}
+
+#header {
+  top: 0px;                                                                     
+  left: 0px;                                                                    
+  width: 100vw;                                                                 
+  height: 20vh;
+}
+
+#details {
+  top: 20vh;
+  left:0px;
+  width: 40vw;
+  height: 80vh;
+}
+
+#activity {
+  top: 20vh;
+  left: 40vw;
+  width: 60vw;
+  height: 80vh;
+}
+
