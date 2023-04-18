@@ -1,0 +1,44 @@
+/*
+Author(s): Angel Benavides, Mark Nguyen, Nishant Athawale                       
+Class: CS 337, Spring 2023                                                      
+File: index.html                                                                
+Assignment: Final Project - LeetCode Clone                                      
+Purpose: Add style to the index page for website. 
+*/
+
+* {
+ box-sizing: border-box;
+}
+
+body {
+  margin: 0px;
+}
+
+.box {
+  position: fixed;                                                                 
+  border: 2px solid black;                                                         
+  padding: 10px;                                                                   
+  overflow-y: scroll;        
+}
+
+#header {
+  top: 0px;                                                                     
+  left: 0px;                                                                    
+  width: 100vw;                                                                 
+  height: 20vh;
+  position: center;  
+}
+
+#content {
+  top: 20vh;
+  left: 0px;
+  height: 80vh;
+  width: 80vw;
+}
+
+#login {
+  top: 20vh;
+  right: 0px;
+  height: 80vh;
+  width: 20vw;
+}
