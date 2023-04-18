@@ -99,18 +99,17 @@ Grader::Grader(int argc, char* args[]) {
 int Grader::compile() {
     // Compile the submission
     string compile_cmd;
-    // int compile_status = system(compile_cmd.c_str());
 
     if (language == "c") {
-        compile_cmd = "gcc " + DEFAULT_GCC_ARGS;
-        compile_cmd += "./submissions/" + submission + "/" + submission + ".c " + "-o ./submissions/" + submission + ".out";
+        compile_cmd = "gcc" + DEFAULT_GCC_ARGS;
+        compile_cmd += "./submissions/" + submission + "/main.c " + "-o ./submissions/" + submission + ".out";
     }
     else if (language == "cpp") {
-        compile_cmd = "g++ " + DEFAULT_GPP_ARGS;
-        compile_cmd += "./submissions/" + submission + "/" + submission + ".cpp " + "-o ./submissions/" + submission + ".out";
+        compile_cmd = "g++" + DEFAULT_GPP_ARGS;
+        compile_cmd += "./submissions/" + submission + "/" + "main.cpp " + "-o ./submissions/" + submission + ".out";
     }
     else if (language == "java") {
-        compile_cmd = "javac ./submissions/" + submission + "/" + submission + ".java";
+        compile_cmd = "javac ./submissions/" + submission + "/Main.java";
     }
     // NOTE: Skip compilation step for python code
     else if (language == "python3") {
@@ -121,7 +120,7 @@ int Grader::compile() {
         return 1;
     }
 
-    int compile_status = system(compile_cmd.c_str());
+    int compile_status = system(("timeout 30s " + compile_cmd).c_str());
     if (compile_status != 0) {
         cerr << "ERROR: Compilation failed." << endl;
         return 1;
