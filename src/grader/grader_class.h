@@ -1,39 +1,22 @@
 #include <iostream>
 #include <stdlib.h>
+#include <string>
 #include <cstring>
 
 using namespace std;
 
 class Grader {
     private:
-        string language;
-        string testcase;
-        string submission_dir;
-        float time_limit;
-
+    // Private variables
+        string language;            // configured using -l
+        string testcase;            // configured using -T
+        string submission;          // configured using -s
+        string time_limit;           // configured using -t
+        string mem_limit;           // configured using -m
     public:
-        Grader(int argc, char* args[]) {
-            time_limit = 0.0;
-            
-            int i = 0;
-            while (i < argc) {
-                char* arg = args[i];
-
-                
-                if (strcmp(arg, "-t") == 0) {
-                    ++i;
-
-                }
-                
-                else if (strcmp(arg, "-l") == 0) {
-
-                }
-
-                i++;
-            }
-        }
-
-        void execute() {
-
-        }
+    // Public methods
+        Grader(int argc, char* args[]);
+        int compile();
+        int execute();
+        
 };
