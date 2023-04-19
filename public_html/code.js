@@ -7,12 +7,13 @@
  * server or implement function.
  */
 
-/* ------ Start index.hmtl functions ----------
+/*** ------ Start index.hmtl functions ----------
 
 /*
  * Chanaes window to webpage for user to create new profile.
  */
-function createUser() {
+function newUser() {
+  
   window.location.href = './newUser.html';
 }
 
@@ -20,53 +21,73 @@ function createUser() {
  * Sends request to server for login.
  */
 function login() {
-  let userName = document.getElementById("username");
-  let passWord = document.getElementById("password");
-  let data = {username: userName, password: passWord};
-  url = "/user/auth/"
-  fetch(url,  {
+  let u = document.getElementById("username").value;
+  let p = document.getElementById("password").value;
+  let url = `/account/login/${u}/${encodeURIComponent(p)}`;
+  if(u == "" || p == "") {
+    window.alert("empty fields");
+    return;
+  }
+  fetch(url)
+  .then((response) => {
+    if(response.ok) {
+      window.location.href = './userHome.html';
+    } else {
+      window.alert("Issue logging in");
+    }
+  })
+  .catch((error) => {
+    window.alert("Server issue logging in");
+    console.log(error);
+  });
+}
+/*** ------ End index.html functions  ------------*/
+
+
+/*** ------ Start newUser.html functions ---------*/
+
+/*                                                
+ * Changes window to webpage for user to create new profile.                       
+ */                                                                                
+function createUser() {
+  let u = document.getElementById("create_username").value;
+  let p = document.getElementById("create_password").value;
+  let e = document.getElementById("email"),value;
+  if(u == "" || p == "" || e == "") {
+    window.alert("empty fields");
+    return;
+  }
+  let data = {Name: u, Password: p, email: e};
+  let url = `/create/account/`;
+  fetch(url, {
     method: 'POST',                                                             
     body: JSON.stringify(data),                                                 
     headers: {"Content-Type": "application/json"}                               
   })
   .then((response) => {
-    return response.text();
+    if(response.ok) {
+      window.alert('New User Created!');          
+      window.location.href = './index.html';
+    } else {
+      window.alert("Issue creating user");
+    }
   })
-  .then((text) => {                                                                
-    if(text === "OK"){
-      window.location.href = './userHome.html';
-      console.log("Bruh Moment");
-    }
-    else{
-      window.alert("Account not found. Create a new one.");
-    }
-  })                                                                           
-  .catch(() => {                                                               
-    alert('something went wrong');                                              
+  .catch((error) => {
+    window.alert("Server issue creating account");
+    console.log(error);
   });
-}
-/* ------ End index.html functions  ------------*/
-
-
-/* ------ Start newUser.html functions ---------*/
-
-/*                                                
- * Changes window to webpage for user to create new profile.                       
- */                                                                                
-function create() {                                                                
-  window.alert('New User Created! Log In');                                                         
-  window.location.href = './index.html';                                           
 }   
 
-/* ------ End newUser.html functions -----------*/
+/*** ------ End newUser.html functions -----------*/
 
-/* ------ Start admin.html functions -----------*/
+/*** ------ Start admin.html functions -----------*/
 function uploadProblem() {
+  let n = document.getElementById("Name").value;
   let d = document.getElementById("desc").value;
   let e1 = document.getElementById("exmp1").value;
   let e2 = document.getElementById("exmp2").value;
   let c = document.getElementById("constraints").value;
-  let data = {desc: d, example1: e1, example2: e2, constraints: c}
+  let data = {name: n, desc: d, example1: e1, example2: e2, constraints: c}
   let url = '/add/problem/'
   fetch(url,  {
     method: 'POST',                                                             
@@ -80,6 +101,34 @@ function uploadProblem() {
     alert('something went wrong');                                              
   });   
 }
+/*** ------ End admin.html functions -------------*/
+
+/*** ------ Start userHome.html ------------------*/
+
+/*
+ * Get list of problemes from server 
+ *
+ */
+function downloadProblems() {
+  let url = '/download/problems/'
+  fetch(url)
+  .then(response => response.json())
+  .then(data => {
+    html = "";
+    (for i in data) {
+      html += `<div><button value="${data[i].name}">
+    }
+  }
+  .catch((error) => {
+    console.error(error);
+  });
+
+  
+}
 
 
-/* ------ End admin.html functions -------------*/
+
+
+
+
+
