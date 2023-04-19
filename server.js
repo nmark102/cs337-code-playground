@@ -8,7 +8,7 @@ const app = express();
 const port = 3000;
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema
-const url = ""
+const url = "mongodb+srv://nishant3j:dKbkythUhL31a5EL@cluster337.jn1tr0y.mongodb.net/test"
 app.use(express.static('public_html'));
 app.use(express.json());
 
@@ -40,10 +40,12 @@ const Users = new Schema({
 });
 
 // Problem Schema
-const Problem = new Schema({
-  // Description
+const Problems = new Schema({
+  description: String,// Description
   // A list of two examples
-  // Sample input
+  example1: String,
+  example2: String,
+  constraints: String// Sample input
 });
 
 // Problem Instance Schema
@@ -62,6 +64,10 @@ const Submission = new Schema({
     // Code
 });
 
+// Setting up models
+
+const Problem = mongoose.model('Problem', Problems);
+
 // Server Routes
 
 // Login Auth
@@ -73,6 +79,23 @@ const Submission = new Schema({
 // Problem Load API
 
 // Program execution API
+
+// Add Problem API
+
+app.post("/add/problem/", async function(req,res){
+  userData = req.body;
+  queryName = req.params.USERNAME;
+  const prob = new Problem({
+    description: userData.desc,// Description
+  // A list of two examples
+    example1: userData.example1,
+    example2: userData.example2,
+    constraints: userData.constraints
+  });
+  prob.save();
+  console.log("Saved");
+  res.send("OK");
+});
 
 
 /**
