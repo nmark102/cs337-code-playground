@@ -1,0 +1,37 @@
+<!DOCTYPE html>                                                                    
+<!--                                                                            
+Author(s): Angel Benavides, Mark Nguyen, Nishant Athawale                       
+Class: CS 337, Spring 2023                                                      
+File: admin.html                                                              
+Assignment: Final Project - LeetCode Clone                                      
+Purpose: Used to enter problem data into MongoDB.                                                                           
+-->                                                                                
+<html lang="en">                                                                   
+<head>                                                                          
+  <meta charset="UTF-8">                                                        
+  <title>Admin</title>                                                      
+  <link id="cssFile" rel="stylesheet" type="text/css" href="./style/admin.css">    
+  <script src="./code.js"></script>                                             
+</head>                                                                            
+  <body>
+    <div id="clickbox" class="box">
+      <button class="button" onclick="uploadProblem()">Submit</button>
+    </div>
+    <div id="box1" class="box">                                                  
+      <h1>Description<h1>                                                     
+      <textarea id="desc">Enter problem description</textarea>                   
+    </div>                                                                         
+    <div id="box2" class="box">                                                
+      <h1>Example 1<h1>                                                     
+      <textarea id="exmp1">Enter problem example 1</textarea>                   
+    </div>                                                                         
+    <div id="box3" class="box">                                                
+      <h1>Example 2<h1>                                                     
+      <textarea id="exmp2">Enter problem example 2</textarea>                   
+    </div>                                                                         
+    <div id="box4" class="box">                                                
+      <h1>Constraints<h1>                                                     
+      <textarea id="constraints"readonly>Enter problem constraints</textarea>                   
+    </div>                                                                         
+  </body>                                                                         
+</html>                          

@@ -2,31 +2,29 @@
 <!--                                                                            
 Author(s): Angel Benavides, Mark Nguyen, Nishant Athawale                     
 Class: CS 337, Spring 2023                                                      
-File: problem.html                                                             
+File: userHome.html                                                             
 Assignment: Final Project - LeetCode Clone                                      
-Purpose: Create a webpage to display the user details and activity of problem
-history.
+Purpose: Create a webpage to display a list of problems for the user to choose
+from.
 -->
 <html lang="en">                                                                
 <head>                                                                          
   <meta charset="UTF-8">                                                        
-  <title>User detials</title>                                   
-  <link id="cssFile" rel="stylesheet" type="text/css" href="./style/problem.css">    
+  <title>Problems list</title>                                                         
+  <link id="cssFile" rel="stylesheet" type="text/css" href="./style/library.css">    
   <script src="./code.js"></script>
 </head>                                                                         
   <body>
     <div id="header" class="box">
-      <h1>Problem: Two Sum<h1>
+      <h1>Solve problems, get points, place on leaderboard<h1>
       <select id="problem_menu" value="Menu" onchange="location = this.value">
-        <option value="">Menu</option>
-        <option value="./userHome.html">Problem list</option>
-        <option value="./index.html">Logout</option>
-      </select>
+        <option value="">Menu</option>                                             
+        <option value="./index.html">Logout</option>                               
+      </select>               
     </div>
-    <!---    <div id="details" class="box"><h1>Details</h1></div> -->
-    <div id="activity" class="box">
-      <textarea id="desc"readonly>Hi area off limits!</textarea>
-      <textarea id="board"></textarea>
+    <div id="stats" class="box"><h1>User Stats</h1></div>
+    <div id="problems" class="box"><h1>Problem list</h1>
+      <div id="choices" class="box"><a href="./problem.html">Choices</a></div>
     </div>
   </body>                                                                         
 </html>                

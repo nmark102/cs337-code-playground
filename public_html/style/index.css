@@ -15,7 +15,8 @@ body {
 }
 
 .box {
-  position: fixed;                                                                 
+  position: fixed;
+  color: inherit;
   border: 2px solid black;                                                         
   padding: 10px;                                                                   
   overflow-y: scroll;        
