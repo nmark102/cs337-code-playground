@@ -20,8 +20,8 @@ function createUser() {
  * Sends request to server for login.
  */
 function login() {
-  let userName = document.getElementById("username");
-  let passWord = document.getElementById("password");
+  let userName = document.getElementById("username").value;
+  let passWord = document.getElementById("password").value;
   let data = {username: userName, password: passWord};
   url = "/user/auth/"
   fetch(url,  {
@@ -32,10 +32,14 @@ function login() {
   .then((response) => {
     return response.text();
   })
-  .then((text) => {                                                                
+  .then((text) => {   
+    console.log(text);                                                             
     if(text === "OK"){
       window.location.href = './userHome.html';
-      console.log("Bruh Moment");
+      // console.log("Bruh Moment");
+    }
+    else if(text === "NOPASS"){
+      window.alert("Wrong Password");
     }
     else{
       window.alert("Account not found. Create a new one.");
@@ -53,9 +57,24 @@ function login() {
 /*                                                
  * Changes window to webpage for user to create new profile.                       
  */                                                                                
-function create() {                                                                
-  window.alert('New User Created! Log In');                                                         
-  window.location.href = './index.html';                                           
+function create() {            
+  let userName = document.getElementById("username").value;
+  let passWord = document.getElementById("password").value;          
+  let primaryEmail = document.getElementById("primaryEmail").value; 
+  let data = {username: userName, password: passWord, email:primaryEmail};
+  let url = "/user/createAccount/"  
+  fetch(url,{
+    method: 'POST',                                                             
+    body: JSON.stringify(data),                                                 
+    headers: {"Content-Type": "application/json"}                               
+  })     
+  .then(() => {                                                                
+    window.alert('New User Created! Log In');                                                         
+    window.location.href = './index.html';
+  })                                                                           
+  .catch(() => {                                                               
+    alert('something went wrong');                                              
+  });                                                                           
 }   
 
 /* ------ End newUser.html functions -----------*/
