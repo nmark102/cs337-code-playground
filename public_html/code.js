@@ -20,8 +20,30 @@ function createUser() {
  * Sends request to server for login.
  */
 function login() {
-  
-  window.location.href = './userHome.html';
+  let userName = document.getElementById("username");
+  let passWord = document.getElementById("password");
+  let data = {username: userName, password: passWord};
+  url = "/user/auth/"
+  fetch(url,  {
+    method: 'POST',                                                             
+    body: JSON.stringify(data),                                                 
+    headers: {"Content-Type": "application/json"}                               
+  })
+  .then((response) => {
+    return response.text();
+  })
+  .then((text) => {                                                                
+    if(text === "OK"){
+      window.location.href = './userHome.html';
+      console.log("Bruh Moment");
+    }
+    else{
+      window.alert("Account not found. Create a new one.");
+    }
+  })                                                                           
+  .catch(() => {                                                               
+    alert('something went wrong');                                              
+  });
 }
 /* ------ End index.html functions  ------------*/
 
@@ -32,7 +54,7 @@ function login() {
  * Changes window to webpage for user to create new profile.                       
  */                                                                                
 function create() {                                                                
-  window.alert('New User Created!');                                                         
+  window.alert('New User Created! Log In');                                                         
   window.location.href = './index.html';                                           
 }   
 

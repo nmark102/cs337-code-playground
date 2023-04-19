@@ -30,12 +30,12 @@ db.on('error', err => {
 
 // User Schema
 const Users = new Schema({
-  // Name
-  // Password
+  name:String,  // Name
+  password:String,// Password
   // Salt 
   // Hash
-  // email
-  // ProblemList (A list of problem instances)
+  email:String,// email
+  problemlist:[Schema.Types.ObjectId]// ProblemList (A list of problem instances)
   // 
 });
 
@@ -67,12 +67,28 @@ const Submission = new Schema({
 // Setting up models
 
 const Problem = mongoose.model('Problem', Problems);
+const User = mongoose.model("User", Users);
+
 
 // Server Routes
 
 // Login Auth
+app.get("/user/auth/", async function(req,res){
+  userData = req.body;
+  const temp = await User.find({name:userDAta.username}).exec();
+  if(temp !== []){
+    // Set current user to the this one
+    res.send("OK");
+  }
+  else{
+    res.send("NOPE");
+  }
+});
 
-// Create Login API
+// Create User API
+app.post("/user/account/", async function(req,res){
+  
+})
 
 // Problem List API
 
