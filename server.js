@@ -29,19 +29,37 @@ db.on('error', err => {
 // Schema setup
 
 // User Schema
-const Users = new Schema({});
+const Users = new Schema({
+  // Name
+  // Password
+  // Salt 
+  // Hash
+  // email
+  // ProblemList (A list of problem instances)
+  // 
+});
 
 // Problem Schema
-const Problem = new Schema({});
+const Problem = new Schema({
+  // Description
+  // A list of two examples
+  // Sample input
+});
 
 // Problem Instance Schema
-const ProblemInstance = new Schema({});
+const ProblemInstance = new Schema({
+  // problem id
+  // List of submissions
+
+});
 
 // Submission Schema
 const Submission = new Schema({
+    // problem id
     language: String,
-    path: String,
     testcase: String
+    // timestamp
+    // Code
 });
 
 // Server Routes
@@ -56,7 +74,6 @@ const Submission = new Schema({
 
 // Program execution API
 
-// 
 
 /**
  * function gradeSubmission: Grade the submission
