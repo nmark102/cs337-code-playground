@@ -230,9 +230,33 @@ async function gradeSubmission(submissionId) {
                 console.log("ERROR: Language " + submission.language + " not supported");
                 return;
         }
-    });
 
-    
+        var testcase = "";
+        var language = "";
+        db.findById(submissionId, function(err, submission) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            testcase = submission.testcase;
+            language = submission.language;
+        });
+
+
+        exec("./bin/grader " + "-s " + submissionId + " -T " + testcase + " -l " + language, (err, stdout, stderr) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            return stdout;
+        }
+    )})
+    .then(verdict => {
+        return Number(verdict)
+    })
+    .catch(err => {
+        console.error(err);
+    });  
 
 }
 
