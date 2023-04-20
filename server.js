@@ -73,12 +73,17 @@ const User = mongoose.model("User", Users);
 // Server Routes
 
 // Login Auth
-app.get("/user/auth/", async function(req,res){
+app.post("/user/auth/", async function(req,res){
   userData = req.body;
-  const temp = await User.find({name:userDAta.username}).exec();
+  const temp = await User.find({name:userData.username}).exec()
   if(temp !== []){
+    if(temp[0].password === userData.password){
+      res.send("OK");
+    }
+    else{
+      res.send("NOPASS");
+    }
     // Set current user to the this one
-    res.send("OK");
   }
   else{
     res.send("NOPE");
@@ -86,8 +91,19 @@ app.get("/user/auth/", async function(req,res){
 });
 
 // Create User API
-app.post("/user/account/", async function(req,res){
-  
+app.post("/user/createAccount/", async function(req,res){
+  userData = req.body;
+  const Usr = new User({
+    name:userData.username,  // Name
+    password:userData.password,// Password
+  // Salt 
+  // Hash
+    email:userData.email,// email
+    problemlist:[]
+  });
+  Usr.save();
+  console.log("Saved");
+  res.send("OK");
 })
 
 // Problem List API

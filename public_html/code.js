@@ -21,19 +21,30 @@ function newUser() {
  * Sends request to server for login.
  */
 function login() {
-  let u = document.getElementById("username").value;
-  let p = document.getElementById("password").value;
-  let url = `/account/login/${u}/${encodeURIComponent(p)}`;
-  if(u == "" || p == "") {
+  let userName = document.getElementById("username").value;
+  let passWord = document.getElementById("password").value;
+  if(userName == "" || passWord == "") {
     window.alert("empty fields");
-    return;
+    return ;
   }
-  fetch(url)
+  let data = {username: userName, password: passWord};
+  url = "/user/auth/"
+  fetch(url,  {
+    method: 'POST',                                                             
+    body: JSON.stringify(data),                                                 
+    headers: {"Content-Type": "application/json"}                               
+  })
   .then((response) => {
-    if(response.ok) {
+    return response.text();
+  })
+  .then((text) => {   
+    console.log(text);                                                             
+    if(text === "OK"){
       window.location.href = './userHome.html';
-    } else {
-      window.alert("Issue logging in");
+      // console.log("Bruh Moment");
+    }
+    else if(text === "NOPASS"){
+      window.alert("Wrong Password");
     }
   })
   .catch((error) => {
@@ -49,33 +60,29 @@ function login() {
 /*                                                
  * Changes window to webpage for user to create new profile.                       
  */                                                                                
-function createUser() {
-  let u = document.getElementById("create_username").value;
-  let p = document.getElementById("create_password").value;
-  let e = document.getElementById("email"),value;
-  if(u == "" || p == "" || e == "") {
+
+function create() {            
+  let userName = document.getElementById("username").value;
+  let passWord = document.getElementById("password").value;          
+  let primaryEmail = document.getElementById("primaryEmail").value;
+  if(userName == "" || passWord == "" || primaryEmail == "") {
     window.alert("empty fields");
-    return;
+    return ;
   }
-  let data = {Name: u, Password: p, email: e};
-  let url = `/create/account/`;
-  fetch(url, {
+  let data = {username: userName, password: passWord, email:primaryEmail};
+  let url = "/user/createAccount/"  
+  fetch(url,{
     method: 'POST',                                                             
     body: JSON.stringify(data),                                                 
     headers: {"Content-Type": "application/json"}                               
-  })
-  .then((response) => {
-    if(response.ok) {
-      window.alert('New User Created!');          
-      window.location.href = './index.html';
-    } else {
-      window.alert("Issue creating user");
-    }
-  })
-  .catch((error) => {
-    window.alert("Server issue creating account");
-    console.log(error);
-  });
+  })     
+  .then(() => {                                                                
+    window.alert('New User Created! Log In');                                                         
+    window.location.href = './index.html';
+  })                                                                           
+  .catch(() => {                                                               
+    alert('something went wrong');                                              
+  });                                                                           
 }   
 
 /*** ------ End newUser.html functions -----------*/
