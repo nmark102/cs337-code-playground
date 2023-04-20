@@ -114,15 +114,16 @@ function uploadProblem() {
  * Used to download problems from data base and display on webpage.
  */
 function downloadProblems() {
-  let url = '/download/problems/'
+  let url = '/problems/download/'
   fetch(url)
   .then(response => response.json())
   .then(data => {
     html = "";
-    for(let i=0; i<data.length;i++) {
-      let name = data[i].name;
+    for(let i=0; i<data.names.length;i++) {
+      console.log(data.names[i])
+      let name = data.names[i];
       html += '<div><button value="' + name + 
-        '" onclick="getProblem(this.value)">' + name + "</button></div>\n";
+        '" onclick="switchWindow(this.value)">' + name + "</button></div>\n";
     }
     document.getElementById('choices').innerHTML = html;
   })
@@ -130,17 +131,19 @@ function downloadProblems() {
     console.error(error);
   }); 
 }
-
+function switchWindow(identifier){
+  window.location.href = 'problem.html'
+  getProblem(identifier);
+}
 /*
  * Changes to problem window and uploads problem for user.
  *
  * @param problem, the name of a problem the user wants.
  */
 function getProblem(problem) {
-  window.location.href = 'problem.html';
-  let url = '/get/problem/'
+  let url = '/problem/get/'
   fetch(url)
-  .then(response => response.json())
+  .then(response => (response.json()))
   .then(data => {
     let text = `${data.name}\n${data.description}\n` + 
       `${data.example1}\n${data.example2}\n` + `${data.constraints}`;
@@ -158,7 +161,7 @@ function submitAndExecute(){
   let code = document.getElementById("board").value
   console.log(code);
   url = "/problem/execute/"
-  data = {codeData: code};
+  data = {codeData: code, language: "python3", testcase: ""};
   fetch(url, {
     method: 'POST',                                                             
     body: JSON.stringify(data),                                                 
@@ -182,6 +185,11 @@ function submitAndExecute(){
 document.addEventListener('DOMContentLoaded', function() {
   if (window.location.href.endsWith('userHome.html')) {
     downloadProblems(); 
+  }
+});
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.location.href.endsWith('problem.html')) {
+    getProblem("Two Sum");
   }
 });
 

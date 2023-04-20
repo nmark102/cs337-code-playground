@@ -109,6 +109,14 @@ app.post("/user/createAccount/", async function(req,res){
 })
 
 // Problem List API
+app.get("/problems/download/", async function(req,res){
+  problems = await Problem.find().exec();
+  nameList = [];
+  for(let i = 0; i< problems.length; i++){
+    nameList.push(problems[i].name)
+  }
+  res.send(JSON.stringify({names:nameList}));
+})
 
 // Problem Load API
 app.get("/problem/get/", async function(req,res){
