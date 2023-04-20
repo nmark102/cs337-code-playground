@@ -94,7 +94,7 @@ function uploadProblem() {
   let e2 = document.getElementById("exmp2").value;
   let c = document.getElementById("constraints").value;
   let data = {name: n, desc: d, example1: e1, example2: e2, constraints: c}
-  let url = '/problem/add/'
+  let url = '/add/problem/'
   fetch(url,  {
     method: 'POST',                                                             
     body: JSON.stringify(data),                                                 
@@ -136,12 +136,12 @@ function downloadProblems() {
  */
 function getProblem(problem) {
   window.location.href = 'problem.html';
-  let url = '/get/problem/'
+  let url = '/problem/get/'
   fetch(url)
   .then(response => response.json())
   .then(data => {
-    let text = `${data.name}\n${data.description}\n` + 
-      `${data.example1}\n${data.example2}\n` + `${data.constraints}`;
+    let text = `${data.name}\n${data.description}\n\n` + 
+      `${data.example1}\n\n${data.example2}\n\n` + `${data.constraints}`;
     document.getElementById('desc').value = text;
   })
   .catch((error) => {
@@ -156,7 +156,7 @@ function submitAndExecute(){
   let code = document.getElementById("board").value
   console.log(code);
   url = "/problem/execute/"
-  data = {codeData: code};
+  data = {codeData: code, language:"python3", testcase: "2-two-sum" };
   fetch(url, {
     method: 'POST',                                                             
     body: JSON.stringify(data),                                                 

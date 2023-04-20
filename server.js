@@ -42,6 +42,7 @@ const Users = new Schema({
 
 // Problem Schema
 const Problems = new Schema({
+  name: String,
   description: String,// Description
   // A list of two examples
   example1: String,
@@ -110,6 +111,12 @@ app.post("/user/createAccount/", async function(req,res){
 // Problem List API
 
 // Problem Load API
+app.get("/problem/get/", async function(req,res){
+  const problem = await Problem.find({name:"Two Sum"}).exec()
+  if(problem.length !== 0){
+    res.send(JSON.stringify(problem[0]));
+  }
+})
 
 app.post("/problem/execute/", async function(req, res) { // Program execution API
   userData = req.body;
@@ -168,6 +175,7 @@ app.post("/add/problem/", async function(req,res){
   userData = req.body;
   queryName = req.params.USERNAME;
   const prob = new Problem({
+    name:userData.name,
     description: userData.desc,// Description
   // A list of two examples
     example1: userData.example1,
