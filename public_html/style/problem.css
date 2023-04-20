@@ -17,8 +17,11 @@ body {
 textarea {
   display: inline-block;
   margin: 0px;
-  width: 50vw;
-  height: 80vh;
+  padding:0px;
+  min-width: 20vw;
+  width: 48vw;
+  min-height: 80vh;
+  max-height: 80vh;
 }
 
 .box {
@@ -32,20 +35,13 @@ textarea {
   top: 0px;                                                                     
   left: 0px;                                                                    
   width: 100vw;                                                                 
-  height: 20vh;
+  height: 15vh;
 }
-/*
-#details {
-  top: 20vh;
-  left:0px;
-  width: 40vw;
-  height: 80vh;
-}
-*/
+
 #activity {
-  top: 20vh;
+  top: 15vh;
   left: 0px;
   width: 100vw;
-  height: 80vh;
+  height: 85vh;
 }
 
