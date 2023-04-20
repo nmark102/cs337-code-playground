@@ -110,7 +110,11 @@ app.post("/user/createAccount/", async function(req,res){
 
 // Problem Load API
 
-// Program execution API
+app.post("/problem/execute/", async function(req,res){// Program execution API
+  userData = req.body;
+  code = userData.code;
+  // TODO: use the code to run the code and store the status in the variable
+})
 
 // Add Problem API
 

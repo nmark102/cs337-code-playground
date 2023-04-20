@@ -95,7 +95,7 @@ function uploadProblem() {
   let e2 = document.getElementById("exmp2").value;
   let c = document.getElementById("constraints").value;
   let data = {name: n, desc: d, example1: e1, example2: e2, constraints: c}
-  let url = '/add/problem/'
+  let url = '/problem/add/'
   fetch(url,  {
     method: 'POST',                                                             
     body: JSON.stringify(data),                                                 
@@ -112,10 +112,6 @@ function uploadProblem() {
 
 /*** ------ Start userHome.html ------------------*/
 
-/*
- * Get list of problemes from server 
- *
- */
 function downloadProblems() {
   let url = '/download/problems/'
   fetch(url)
@@ -123,15 +119,63 @@ function downloadProblems() {
   .then(data => {
     html = "";
     (for i in data) {
-      html += `<div><button value="${data[i].name}">
+      let name = data[i].name;
+      html += '<div><button value="' + name + 
+        '" onclick="getProblem(this.value)">' + name + "</button></div>\n";
     }
+    document.getElementById('choices').innerHTML = html;
   }
   .catch((error) => {
     console.error(error);
-  });
-
-  
+  }); 
 }
+
+/*
+ * Changes to problem window and uploads problem for user.
+ *
+ * @param problem, the name of a problem the user wants.
+ */
+function getProblem(problem) {
+  window.location.href = 'problem.html';
+  let url = '/get/problem/'
+  fetch(url)
+  .then(response => response.json())
+  .then(data => {
+    let text = `${data.name}\n${data.description}\n` + 
+      `${data.example1}\n${data.example2}\n` + `${data.constraints}`;
+    document.getElementById('desc').value = text;
+  })
+  .catch((error) => {
+    console.error(error);
+  })
+
+}
+
+
+/*** ------ Start problem.html functions ------------------*/
+function submitAndExecute(){
+  let code = document.getElementById("board").value
+  console.log(code);
+  url = "/problem/execute/"
+  data = {codeData: code};
+  fetch(url, {
+    method: 'POST',                                                             
+    body: JSON.stringify(data),                                                 
+    headers: {"Content-Type": "application/json"}  
+  })
+  .then((response) => {                                                                
+    return response.text;
+  })  
+  .then((text) => {                                                                
+    window.alert(text);
+  })                                                                           
+  .catch(() => {                                                               
+    alert('something went wrong');                                              
+  });  
+
+}
+/*** ------ End problem.html functions -------------*/
+
 
 
 
