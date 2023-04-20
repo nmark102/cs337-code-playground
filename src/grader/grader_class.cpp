@@ -234,10 +234,10 @@ int Grader::execute() {
         exec_cmd += "< " + testcase; 
 
         // Pipe stdout
-        exec_cmd += " 1>" + SUBMISSIONS_BASE_DIR + submission_id + "/" + testcase_name + ".out";
+        exec_cmd += " 1> " + SUBMISSIONS_BASE_DIR + submission_id + "/" + testcase_name + ".out";
 
         // Pipe stderr
-        exec_cmd += " 2>" + SUBMISSIONS_BASE_DIR + submission_id + "/" + testcase_name + ".err";
+        exec_cmd += " 2> " + SUBMISSIONS_BASE_DIR + submission_id + "/" + testcase_name + ".err";
 
         // Printing exec cmd for debugging purposes
         #ifdef VERBOSE_MODE
@@ -263,9 +263,12 @@ int Grader::execute() {
         }
 
         // Check if the submission's output matches the expected output
-        string diff_cmd = "diff " + testcase_path + testcase + ".expected_output " 
-        + SUBMISSIONS_BASE_DIR + submission_id + "/" + testcase + ".out"
-        + " > " + SUBMISSIONS_BASE_DIR + submission_id + "/" + testcase + ".diff";
+        
+        // Configure diff and expected output
+        string diff_cmd = "diff -b " + testcase_path + "/" + testcase_name + ".expected_output ";
+        // Configure actual output
+        diff_cmd += SUBMISSIONS_BASE_DIR + submission_id + "/" + testcase_name + ".out"
+        + " > " + SUBMISSIONS_BASE_DIR + submission_id + "/" + testcase_name + ".diff";
 
         cout << "Comparing answers using: " << diff_cmd << endl;
 
