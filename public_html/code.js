@@ -83,8 +83,7 @@ function create() {
   .catch(() => {                                                               
     alert('something went wrong');                                              
   });                                                                           
-}   
-
+}
 /*** ------ End newUser.html functions -----------*/
 
 /*** ------ Start admin.html functions -----------*/
@@ -118,13 +117,13 @@ function downloadProblems() {
   .then(response => response.json())
   .then(data => {
     html = "";
-    (for i in data) {
+    for(let i=0; i<data.length;i++) {
       let name = data[i].name;
       html += '<div><button value="' + name + 
         '" onclick="getProblem(this.value)">' + name + "</button></div>\n";
     }
     document.getElementById('choices').innerHTML = html;
-  }
+  })
   .catch((error) => {
     console.error(error);
   }); 
