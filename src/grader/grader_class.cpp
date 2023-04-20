@@ -4,6 +4,8 @@
 #include "utils.h"
 #endif
 
+extern const string SUBMISSIONS_BASE_DIR;
+
 extern const string DEFAULT_TIME_LIMIT;
 extern const string DEFAULT_MEM_LIMIT;
 extern const string DEFAULT_GCC_ARGS;
@@ -102,14 +104,14 @@ int Grader::compile() {
 
     if (language == "c") {
         compile_cmd = "gcc" + DEFAULT_GCC_ARGS;
-        compile_cmd += "./submissions/" + submission + "/main.c " + "-o ./submissions/" + submission + ".out";
+        compile_cmd += "~/submissions/" + submission + "/main.c " + "-o ~/submissions/" + submission + ".out";
     }
     else if (language == "cpp") {
         compile_cmd = "g++" + DEFAULT_GPP_ARGS;
-        compile_cmd += "./submissions/" + submission + "/" + "main.cpp " + "-o ./submissions/" + submission + ".out";
+        compile_cmd += "~/submissions/" + submission + "/" + "main.cpp " + "-o ~/submissions/" + submission + ".out";
     }
     else if (language == "java") {
-        compile_cmd = "javac ./submissions/" + submission + "/Main.java";
+        compile_cmd = "javac ~/submissions/" + submission + "/Main.java";
     }
     // NOTE: Skip compilation step for python code
     else if (language == "python3") {
@@ -128,5 +130,5 @@ int Grader::compile() {
 }
 
 int Grader::execute() {
-    string base_exec_cmd = "docker run timeout " + time_limit + "s ./submissions/" + submission + ".out";
+    string base_exec_cmd = "docker run timeout " + time_limit + "s ~/submissions/" + submission + ".out";
 }
