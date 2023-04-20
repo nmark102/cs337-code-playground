@@ -184,7 +184,7 @@ app.post("/problem/execute/", async function(req, res) { // Program execution AP
 
 // Add Problem API
 
-app.post("/add/problem/", async function(req,res){
+app.post("/problem/add/", async function(req,res){
   userData = req.body;
   queryName = req.params.USERNAME;
   const prob = new Problem({

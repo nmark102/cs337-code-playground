@@ -132,6 +132,7 @@ function downloadProblems() {
   }); 
 }
 function switchWindow(identifier){
+  console.log(identifier)
   window.location.href = 'problem.html'
   getProblem(identifier);
 }
@@ -187,9 +188,9 @@ document.addEventListener('DOMContentLoaded', function() {
     downloadProblems(); 
   }
 });
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.location.href.endsWith('problem.html')) {
-    getProblem("Two Sum");
-  }
-});
+// document.addEventListener('DOMContentLoaded', function() {
+//   if (window.location.href.endsWith('problem.html')) {
+//     getProblem("Two Sum");
+//   }
+// });
 
