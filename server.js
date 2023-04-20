@@ -7,6 +7,7 @@ const exec = require('child_process').exec;
 const app = express();
 const port = 3000;
 const mongoose = require('mongoose');
+const fs = require('fs');
 const Schema = mongoose.Schema
 const url = "mongodb+srv://nishant3j:dKbkythUhL31a5EL@cluster337.jn1tr0y.mongodb.net/test"
 app.use(express.static('public_html'));
@@ -110,11 +111,59 @@ app.post("/user/createAccount/", async function(req,res){
 
 // Problem Load API
 
-app.post("/problem/execute/", async function(req,res){// Program execution API
+app.post("/problem/execute/", async function(req, res) { // Program execution API
   userData = req.body;
   code = userData.code;
+  
   // TODO: use the code to run the code and store the status in the variable
-})
+  var submission = new Submission({
+    
+    // Extract source code, language, and chosen problemset to create a new submission
+    language: userData.language,
+    testcase: userData.testcase,
+    code: userData.code
+  }).save()
+  .then(item => {
+    // Write the sourcode code
+    var srcPath = "./submissions/" + item._id + "/";
+
+    switch (item.language) {
+        case "python3":
+            srcPath += "main.py";
+            break;
+        case "java":
+            srcPath += "Main.java";
+            break;
+        case "c":
+            srcPath += "main.c";
+            break;
+        case "cpp":
+            srcPath += "main.cpp";
+            break;
+        default:
+            console.log("ERROR: Language " + item.language + " not supported");
+            return;
+    }
+
+    fs.writeFile(srcPath, item.code, function(err) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+    });
+
+  })
+  .then(item => {
+    // Run the code
+    var verdict = gradeSubmission(item._id);
+  })
+  .then(verdict => {
+    return verdict;
+  })
+  .catch(err => {
+    console.error(err);
+  });
+});
 
 // Add Problem API
 
