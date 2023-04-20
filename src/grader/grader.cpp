@@ -28,18 +28,29 @@ int main(int argc, char* argv[]) {
     
     // Probe if shell is available
     if (system(NULL) == 0) {
-        cerr << "Shell is not available" << endl;
+        cerr << "Shell is unavailable" << endl;
         exit(GRADER_CRASHED);
     }
 
-    Grader grader(argc - 1, argv + 1);    
+    Grader* grader;
+    
+    try {
+        grader = new Grader(argc - 1, argv + 1);    
+    } catch (const char* msg) {
+        cerr << "Args not parsed correctly" << endl;
+        cerr << msg << endl;
+        fflush(stderr);
+        return GRADER_CRASHED;
+    }
 
     // Compile
     int compile_status;
     try {
-        compile_status = grader.compile();
+        compile_status = grader->compile();
     } catch (const char* msg) {
+        cerr << "Crashed in compile function" << endl;
         cerr << msg << endl;
+        fflush(stderr);
         return GRADER_CRASHED;
     }
 
@@ -48,5 +59,9 @@ int main(int argc, char* argv[]) {
     }
     
     // Execute
-    return grader.execute();
+    // @TODO: Grader crashes somewhere in execute
+    int execute_status = grader->execute();
+    delete grader;
+
+    return execute_status;
 }

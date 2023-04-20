@@ -112,6 +112,8 @@ Grader::Grader(int argc, char* args[]) {
             error_msg += "Testcase not specified. ";
         }
 
+        fprintf(stderr, "Args not parsed correctly. Terminating.\n");
+
         throw "ERROR: " + error_msg + "\n";
     }
 }
@@ -122,11 +124,13 @@ int Grader::compile() {
 
     if (language == "c") {
         compile_cmd = "gcc " + DEFAULT_GCC_ARGS;
-        compile_cmd += "~/submissions/" + submission_id + "/main.c " + "-o ~/submissions/" + submission_id + ".out";
+        compile_cmd += SUBMISSIONS_BASE_DIR + submission_id + "/main.c ";
+        compile_cmd += "-o " + SUBMISSIONS_BASE_DIR + submission_id + "/" + submission_id + ".out";
     }
     else if (language == "cpp") {
         compile_cmd = "g++ " + DEFAULT_GPP_ARGS;
-        compile_cmd += "~/submissions/" + submission_id + "/" + "main.cpp " + "-o ~/submissions/" + submission_id + ".out";
+        compile_cmd += SUBMISSIONS_BASE_DIR + submission_id + "/" + "main.cpp ";
+        compile_cmd += "-o " + SUBMISSIONS_BASE_DIR + submission_id + ".out";
     }
     else if (language == "java") {
         compile_cmd = "javac " + SUBMISSIONS_BASE_DIR + submission_id + "/Main.java";
@@ -138,6 +142,9 @@ int Grader::compile() {
     else {
         throw "Language \"" + language + "\" is not supported.";
     }
+
+    // Pipe compiler output
+    compile_cmd += " 2> " + SUBMISSIONS_BASE_DIR + submission_id + "/compiler_output.txt";
 
     int compile_status = system(("timeout 30s " + compile_cmd).c_str());
     if (compile_status != 0) {
@@ -213,9 +220,19 @@ int Grader::execute() {
     }
 
     // Clean up submission output and diff output files
-    string cleanup_cmd = "rm " + SUBMISSIONS_BASE_DIR + submission_id + "/*.diff " + SUBMISSIONS_BASE_DIR + submission_id + "/*.out";
+    return ACCEPTED;
+}
+
+
+Grader::~Grader() {
+    // Delete compiler output
+    string cleanup_cmd = "rm " + SUBMISSIONS_BASE_DIR + submission_id + "/compiler_output.txt";
+    if (system(cleanup_cmd.c_str()) != 0) {
+        cerr << "WARNING: Failed to clean up compiler output." << endl;
+    }
+
+    cleanup_cmd = "rm " + SUBMISSIONS_BASE_DIR + submission_id + "/*.diff " + SUBMISSIONS_BASE_DIR + submission_id + "/*.out";
     if (system(cleanup_cmd.c_str()) != 0) {
         cerr << "WARNING: Failed to clean up submission output and diff files." << endl;
     }
-    return ACCEPTED;
 }
