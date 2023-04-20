@@ -21,3 +21,5 @@ echo $(./bin/grader -l c -T 1-add-two-numbers -s 3)
 
 echo "Testcase 4: Language: Python. Expected status 2 (wrong answer)."
 echo $(./bin/grader -l python3 -t 2 -T 1-add-two-numbers -s 4)
+
+rm ./submissions/*/*.out
