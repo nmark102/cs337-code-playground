@@ -10,8 +10,8 @@ class Grader {
     // Private variables
         string language;            // configured using -l
         string testcase;            // configured using -T
-        string submission;          // configured using -s
-        string time_limit;           // configured using -t
+        string submission_id;       // configured using -s
+        string time_limit;          // configured using -t
         string mem_limit;           // configured using -m
     public:
     // Public methods
