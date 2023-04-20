@@ -7,12 +7,13 @@
  * server or implement function.
  */
 
-/* ------ Start index.hmtl functions ----------
+/*** ------ Start index.hmtl functions ----------
 
 /*
  * Chanaes window to webpage for user to create new profile.
  */
-function createUser() {
+function newUser() {
+  
   window.location.href = './newUser.html';
 }
 
@@ -22,6 +23,10 @@ function createUser() {
 function login() {
   let userName = document.getElementById("username").value;
   let passWord = document.getElementById("password").value;
+  if(userName == "" || passWord == "") {
+    window.alert("empty fields");
+    return ;
+  }
   let data = {username: userName, password: passWord};
   url = "/user/auth/"
   fetch(url,  {
@@ -41,26 +46,29 @@ function login() {
     else if(text === "NOPASS"){
       window.alert("Wrong Password");
     }
-    else{
-      window.alert("Account not found. Create a new one.");
-    }
-  })                                                                           
-  .catch(() => {                                                               
-    alert('something went wrong');                                              
+  })
+  .catch((error) => {
+    window.alert("Server issue logging in");
+    console.log(error);
   });
 }
-/* ------ End index.html functions  ------------*/
+/*** ------ End index.html functions  ------------*/
 
 
-/* ------ Start newUser.html functions ---------*/
+/*** ------ Start newUser.html functions ---------*/
 
 /*                                                
  * Changes window to webpage for user to create new profile.                       
  */                                                                                
+
 function create() {            
   let userName = document.getElementById("username").value;
   let passWord = document.getElementById("password").value;          
-  let primaryEmail = document.getElementById("primaryEmail").value; 
+  let primaryEmail = document.getElementById("primaryEmail").value;
+  if(userName == "" || passWord == "" || primaryEmail == "") {
+    window.alert("empty fields");
+    return ;
+  }
   let data = {username: userName, password: passWord, email:primaryEmail};
   let url = "/user/createAccount/"  
   fetch(url,{
@@ -77,15 +85,16 @@ function create() {
   });                                                                           
 }   
 
-/* ------ End newUser.html functions -----------*/
+/*** ------ End newUser.html functions -----------*/
 
-/* ------ Start admin.html functions -----------*/
+/*** ------ Start admin.html functions -----------*/
 function uploadProblem() {
+  let n = document.getElementById("Name").value;
   let d = document.getElementById("desc").value;
   let e1 = document.getElementById("exmp1").value;
   let e2 = document.getElementById("exmp2").value;
   let c = document.getElementById("constraints").value;
-  let data = {desc: d, example1: e1, example2: e2, constraints: c}
+  let data = {name: n, desc: d, example1: e1, example2: e2, constraints: c}
   let url = '/add/problem/'
   fetch(url,  {
     method: 'POST',                                                             
@@ -99,6 +108,34 @@ function uploadProblem() {
     alert('something went wrong');                                              
   });   
 }
+/*** ------ End admin.html functions -------------*/
+
+/*** ------ Start userHome.html ------------------*/
+
+/*
+ * Get list of problemes from server 
+ *
+ */
+function downloadProblems() {
+  let url = '/download/problems/'
+  fetch(url)
+  .then(response => response.json())
+  .then(data => {
+    html = "";
+    (for i in data) {
+      html += `<div><button value="${data[i].name}">
+    }
+  }
+  .catch((error) => {
+    console.error(error);
+  });
+
+  
+}
 
 
-/* ------ End admin.html functions -------------*/
+
+
+
+
+
