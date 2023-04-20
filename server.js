@@ -124,7 +124,7 @@ app.post("/problem/execute/", async function(req, res) { // Program execution AP
     code: userData.code
   }).save()
   .then(item => {
-    // Write the sourcode code
+    // Write the source code
     var srcPath = "./submissions/" + item._id + "/";
 
     switch (item.language) {
@@ -153,10 +153,7 @@ app.post("/problem/execute/", async function(req, res) { // Program execution AP
     });
 
   })
-  .then(item => {
-    // Run the code
-    var verdict = gradeSubmission(item._id);
-  })
+  .then( gradeSubmission(submission._id) )
   .then(verdict => {
     return verdict;
   })
@@ -202,48 +199,18 @@ app.post("/add/problem/", async function(req,res){
  * 4 = TBD
  */
 async function gradeSubmission(submissionId) {
-    var submissionPath = null;
-    var testcasePath = null;
-
+    
     await Submission.findById(submissionId, function(err, submission) {
         if (err) {
             console.log(err);
             return;
         }
-    
-        submissionPath = "./submissions/" + submissionId + "/";
 
-        switch (submission.language) {
-            case "python3":
-                submissionPath += "main.py";
-                break;
-            case "java":
-                submissionPath += "Main.java";
-                break;
-            case "c":
-                submissionPath += "main.c";
-                break;
-            case "cpp":
-                submissionPath += "main.cpp";
-                break;
-            default:
-                console.log("ERROR: Language " + submission.language + " not supported");
-                return;
-        }
+        var submissionArg = "-s " + submission._id + " ";
+        var languageArg = "-l " + submission.language + " ";
+        var testcaseArg = "-T " + submission.testcase + " ";
 
-        var testcase = "";
-        var language = "";
-        db.findById(submissionId, function(err, submission) {
-            if (err) {
-                console.log(err);
-                return;
-            }
-            testcase = submission.testcase;
-            language = submission.language;
-        });
-
-
-        exec("./bin/grader " + "-s " + submissionId + " -T " + testcase + " -l " + language, (err, stdout, stderr) => {
+        exec("./bin/grader " + submissionArg + languageArg + testcaseArg, (err, stdout, stderr) => {
             if (err) {
                 console.error(err);
                 return;
