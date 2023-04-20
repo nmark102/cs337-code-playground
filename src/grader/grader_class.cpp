@@ -150,7 +150,7 @@ int Grader::compile() {
     }
 
     // Pipe compiler output
-    compile_cmd += " 2> " + SUBMISSIONS_BASE_DIR + submission_id + "/compiler_output.txt";
+    // compile_cmd += " 2> " + SUBMISSIONS_BASE_DIR + submission_id + "/compiler_output.txt";
     cout << "Compiling with command: " << compile_cmd << endl;
 
     int compile_status = system((compile_cmd).c_str());
@@ -178,12 +178,11 @@ int Grader::execute() {
     cout << "Finding testcases from " << testcase_path << endl;
     #endif
 
+    // Write the list of testcases to ./testcases/{TESTCASE_NAME}/tc_list.txt
     if (system(("ls " + testcase_path + "*.stdin > " + testcase_path + "tc_list.txt").c_str()) != 0) {
         cerr << "ERROR: Testcase \"" << testcase << "\" does not exist or is inaccessible." << endl;
         return GRADER_CRASHED;
     }
-
-    //system(("chmod 774 " + SUBMISSIONS_BASE_DIR + submission_id + "/" + submission_id + ".out").c_str());
 
     // Read list of testcases
     vector<string> tc_list = {};
@@ -204,14 +203,21 @@ int Grader::execute() {
     string base_exec_cmd = "timeout " + time_limit;
 
     for (string testcase: tc_list) {
+        // Parse testcase names
+        // Step 1: Extract the file name (with extension)
+        string testcase_name = split(testcase, "/")[2];
+        
         // Bugfix: "tc_list.txt" is included in the list of testcases. Ignore for now.
-        if (testcase == "tc_list.txt") {
+        if (testcase_name == "tc_list.txt") {
             continue;
         }
         
+        // Step 2: Remove file extension
+        testcase_name = split(testcase_name, ".")[0];
+        cout << "Parsed testcase name: " << testcase_name << endl;
+        
         // Invoke the submission per the specified language
         string exec_cmd = base_exec_cmd; 
-
         if (language == "c" || language == "cpp") {
             exec_cmd += SUBMISSIONS_BASE_DIR + submission_id + "/a.out ";
         }
@@ -224,8 +230,14 @@ int Grader::execute() {
             exec_cmd += "python3 " + SUBMISSIONS_BASE_DIR + submission_id + "/main.py ";
         }
         
-        // Pipe I/O to/from the submission
-        exec_cmd += "< " + testcase_path + testcase + " > " + SUBMISSIONS_BASE_DIR + submission_id + "/" + testcase + ".out";
+        // Pipe input from the testcase path;
+        exec_cmd += "< " + testcase; 
+
+        // Pipe stdout
+        exec_cmd += " 1>" + SUBMISSIONS_BASE_DIR + submission_id + "/" + testcase_name + ".out";
+
+        // Pipe stderr
+        exec_cmd += " 2>" + SUBMISSIONS_BASE_DIR + submission_id + "/" + testcase_name + ".err";
 
         // Printing exec cmd for debugging purposes
         #ifdef VERBOSE_MODE
@@ -242,10 +254,20 @@ int Grader::execute() {
             return MEMORY_LIMIT_EXCEEDED;
         }
 
+        else if (exec_status != 0) {
+            cerr << "Runtime error. Exit code is " << exec_status << endl;
+            return RUNTIME_ERROR;
+        }
+        else {
+            cout << "Ran testcase " + testcase_name + " successfully." << endl;
+        }
+
         // Check if the submission's output matches the expected output
         string diff_cmd = "diff " + testcase_path + testcase + ".expected_output " 
         + SUBMISSIONS_BASE_DIR + submission_id + "/" + testcase + ".out"
         + " > " + SUBMISSIONS_BASE_DIR + submission_id + "/" + testcase + ".diff";
+
+        cout << "Comparing answers using: " << diff_cmd << endl;
 
         if (system(diff_cmd.c_str()) != 0) {
             return WRONG_ANSWER;
@@ -260,12 +282,15 @@ int Grader::execute() {
 Grader::~Grader() {
     // Delete compiler output
     #ifndef NO_CLEANUP
-    string cleanup_cmd = "rm -f " + SUBMISSIONS_BASE_DIR + submission_id + "/compiler_output.txt";
-    if (system(cleanup_cmd.c_str()) != 0) {
-        cerr << "WARNING: Failed to clean up compiler output." << endl;
-    }
+    //string cleanup_cmd = "rm -f " + SUBMISSIONS_BASE_DIR + submission_id + "/compiler_output.txt";
+    //if (system(cleanup_cmd.c_str()) != 0) {
+    //    cerr << "WARNING: Failed to clean up compiler output." << endl;
+    //}
 
-    cleanup_cmd = "rm -f " + SUBMISSIONS_BASE_DIR + submission_id + "/*.diff " + SUBMISSIONS_BASE_DIR + submission_id + "/*.out";
+    cleanup_cmd = "rm -f ";
+    cleanup_cmd += SUBMISSIONS_BASE_DIR + submission_id + "/*.diff ";
+    cleanup_cmd += SUBMISSIONS_BASE_DIR + submission_id + "/*.out";
+    cleanup_cmd += SUBMISSIONS_BASE_DIR + submission_id + "/*.err";
     if (system(cleanup_cmd.c_str()) != 0) {
         cerr << "WARNING: Failed to clean up submission output and diff files." << endl;
     }

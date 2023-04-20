@@ -31,3 +31,5 @@ const string TESTCASES_BASE_DIR = "testcases/";
 
 // Function headers
 void readlines(vector<string>* dest, const string filename);
+
+vector<string> split(string s, string delimiter);
