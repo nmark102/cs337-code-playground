@@ -121,10 +121,15 @@ app.get("/problem/get/", async function(req,res){
 app.post("/problem/execute/", async function(req, res) { // Program execution API
   userData = req.body;
   code = userData.code;
+  verdictDict = {0: "Accepted",
+    1: "Compile error",
+    2:" Runtime error",
+    3: "Wrong answer",
+    4: "Time limit exceeded",
+    5: "Memory limit exceeded"}
   
   // TODO: use the code to run the code and store the status in the variable
   var submission = new Submission({
-    
     // Extract source code, language, and chosen problemset to create a new submission
     language: userData.language,
     testcase: userData.testcase,
@@ -162,7 +167,7 @@ app.post("/problem/execute/", async function(req, res) { // Program execution AP
   })
   .then( gradeSubmission(submission._id) )
   .then(verdict => {
-    return verdict;
+    res.send(verdictDict[verdict]);
   })
   .catch(err => {
     console.error(err);
