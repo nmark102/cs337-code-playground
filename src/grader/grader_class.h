@@ -3,6 +3,8 @@
 #include <string>
 #include <cstring>
 
+#define VERBOSE
+
 using namespace std;
 
 class Grader {
@@ -16,6 +18,7 @@ class Grader {
     public:
     // Public methods
         Grader(int argc, char* args[]);
+        void printConfigs();
         int compile();
         int execute();
         ~Grader();

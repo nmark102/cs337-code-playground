@@ -43,6 +43,7 @@ int main(int argc, char* argv[]) {
         return GRADER_CRASHED;
     }
 
+    
     // Compile
     int compile_status;
     try {
@@ -57,7 +58,9 @@ int main(int argc, char* argv[]) {
     if (compile_status != ACCEPTED) {
         return COMPILER_ERROR;
     }
-    
+        
+    cout << "Compiled successfully" << endl << endl;
+
     // Execute
     // @TODO: Grader crashes somewhere in execute
     int execute_status = grader->execute();

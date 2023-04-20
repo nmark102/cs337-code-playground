@@ -4,6 +4,11 @@
 #include "utils.h"
 #endif
 
+#define VERBOSE_MODE
+#define NO_CLEANUP
+
+using namespace std;
+
 extern const int GRADER_CRASHED;
 extern const int ACCEPTED;
 extern const int COMPILER_ERROR;
@@ -29,6 +34,7 @@ extern const string DEFAULT_MEM_LIMIT;
 extern const string SUBMISSIONS_BASE_DIR;
 extern const string TESTCASES_BASE_DIR;
 
+// Constructor
 Grader::Grader(int argc, char* args[]) {
     float time_limit_numerical_val = 0.0;
     
@@ -125,12 +131,12 @@ int Grader::compile() {
     if (language == "c") {
         compile_cmd = "gcc " + DEFAULT_GCC_ARGS;
         compile_cmd += SUBMISSIONS_BASE_DIR + submission_id + "/main.c ";
-        compile_cmd += "-o " + SUBMISSIONS_BASE_DIR + submission_id + "/" + submission_id + ".out";
+        compile_cmd += "-o " + SUBMISSIONS_BASE_DIR + submission_id + "/a.out";
     }
     else if (language == "cpp") {
         compile_cmd = "g++ " + DEFAULT_GPP_ARGS;
         compile_cmd += SUBMISSIONS_BASE_DIR + submission_id + "/" + "main.cpp ";
-        compile_cmd += "-o " + SUBMISSIONS_BASE_DIR + submission_id + ".out";
+        compile_cmd += "-o " + SUBMISSIONS_BASE_DIR + submission_id + "/a.out";
     }
     else if (language == "java") {
         compile_cmd = "javac " + SUBMISSIONS_BASE_DIR + submission_id + "/Main.java";
@@ -145,8 +151,9 @@ int Grader::compile() {
 
     // Pipe compiler output
     compile_cmd += " 2> " + SUBMISSIONS_BASE_DIR + submission_id + "/compiler_output.txt";
+    cout << "Compiling with command: " << compile_cmd << endl;
 
-    int compile_status = system(("timeout 30s " + compile_cmd).c_str());
+    int compile_status = system((compile_cmd).c_str());
     if (compile_status != 0) {
         cerr << "ERROR: Compilation failed." << endl;
         return COMPILER_ERROR;
@@ -155,16 +162,28 @@ int Grader::compile() {
     return ACCEPTED;
 }
 
+void Grader::printConfigs() {
+    cout << "ID:       " << submission_id << endl;
+    cout << "Language: " << language << endl;
+    cout << "Testcase: " << testcase << endl;
+}
+
 int Grader::execute() {
     // Temporarily removing Docker support
     // string base_exec_cmd = "docker run timeout " + time_limit + "s ~/submissions/" + submission_id + ".out";
 
     // Find testcases
     string testcase_path = TESTCASES_BASE_DIR + testcase + "/";
-    if (system(("ls " + testcase_path + " > tc_list.txt").c_str()) != 0) {
+    #ifdef VERBOSE_MODE
+    cout << "Finding testcases from " << testcase_path << endl;
+    #endif
+
+    if (system(("ls " + testcase_path + "*.stdin > " + testcase_path + "tc_list.txt").c_str()) != 0) {
         cerr << "ERROR: Testcase \"" << testcase << "\" does not exist or is inaccessible." << endl;
         return GRADER_CRASHED;
     }
+
+    //system(("chmod 774 " + SUBMISSIONS_BASE_DIR + submission_id + "/" + submission_id + ".out").c_str());
 
     // Read list of testcases
     vector<string> tc_list = {};
@@ -176,15 +195,25 @@ int Grader::execute() {
         return GRADER_CRASHED;
     }
 
+    cout << "Testcases to be executed: " << endl;
+    for (string testcase: tc_list) {
+        cout << testcase << endl;
+    }
+
     // Actually execute the submission
     string base_exec_cmd = "timeout " + time_limit;
 
     for (string testcase: tc_list) {
+        // Bugfix: "tc_list.txt" is included in the list of testcases. Ignore for now.
+        if (testcase == "tc_list.txt") {
+            continue;
+        }
+        
         // Invoke the submission per the specified language
         string exec_cmd = base_exec_cmd; 
 
         if (language == "c" || language == "cpp") {
-            exec_cmd += SUBMISSIONS_BASE_DIR + submission_id + "/" + submission_id + ".out ";
+            exec_cmd += SUBMISSIONS_BASE_DIR + submission_id + "/a.out ";
         }
 
         else if (language == "java") {
@@ -198,6 +227,10 @@ int Grader::execute() {
         // Pipe I/O to/from the submission
         exec_cmd += "< " + testcase_path + testcase + " > " + SUBMISSIONS_BASE_DIR + submission_id + "/" + testcase + ".out";
 
+        // Printing exec cmd for debugging purposes
+        #ifdef VERBOSE_MODE
+        cout << "Executing: " << exec_cmd << endl;
+        #endif
         int exec_status = system(exec_cmd.c_str());
 
         // Check if the submission timed out
@@ -223,16 +256,18 @@ int Grader::execute() {
     return ACCEPTED;
 }
 
-
+// Destructor
 Grader::~Grader() {
     // Delete compiler output
-    string cleanup_cmd = "rm " + SUBMISSIONS_BASE_DIR + submission_id + "/compiler_output.txt";
+    #ifndef NO_CLEANUP
+    string cleanup_cmd = "rm -f " + SUBMISSIONS_BASE_DIR + submission_id + "/compiler_output.txt";
     if (system(cleanup_cmd.c_str()) != 0) {
         cerr << "WARNING: Failed to clean up compiler output." << endl;
     }
 
-    cleanup_cmd = "rm " + SUBMISSIONS_BASE_DIR + submission_id + "/*.diff " + SUBMISSIONS_BASE_DIR + submission_id + "/*.out";
+    cleanup_cmd = "rm -f " + SUBMISSIONS_BASE_DIR + submission_id + "/*.diff " + SUBMISSIONS_BASE_DIR + submission_id + "/*.out";
     if (system(cleanup_cmd.c_str()) != 0) {
         cerr << "WARNING: Failed to clean up submission output and diff files." << endl;
     }
+    #endif
 }
