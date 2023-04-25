@@ -133,16 +133,17 @@ function downloadProblems() {
 }
 function switchWindow(identifier){
   console.log(identifier)
+  localStorage.setItem('problem', identifier);
   window.location.href = 'problem.html'
-  getProblem(identifier);
+//  getProblem(identifier);
 }
 /*
  * Changes to problem window and uploads problem for user.
  *
  * @param problem, the name of a problem the user wants.
  */
-function getProblem(problem) {
-  let url = '/problem/get/'
+function getProblem(p) {
+  let url = `/problem/get/${p}`
   fetch(url)
   .then(response => (response.json()))
   .then(data => {
@@ -188,9 +189,11 @@ document.addEventListener('DOMContentLoaded', function() {
     downloadProblems(); 
   }
 });
-// document.addEventListener('DOMContentLoaded', function() {
-//   if (window.location.href.endsWith('problem.html')) {
-//     getProblem("Two Sum");
-//   }
-// });
+
+document.addEventListener('DOMContentLoaded', function() {
+   if (window.location.href.endsWith('problem.html')) { 
+     let p = localStorage.getItem('problem')
+     getProblem(p);
+   }
+});
 
