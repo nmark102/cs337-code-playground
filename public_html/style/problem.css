@@ -14,16 +14,6 @@ body {
   margin: 0px;
 }
 
-textarea {
-  display: inline-block;
-  margin: 0px;
-  padding:0px;
-  min-width: 20vw;
-  width: 48vw;
-  min-height: 80vh;
-  max-height: 80vh;
-}
-
 .box {
   position: fixed;                                                                 
   border: 2px solid black;                                                         
@@ -35,13 +25,27 @@ textarea {
   top: 0px;                                                                     
   left: 0px;                                                                    
   width: 100vw;                                                                 
-  height: 15vh;
+  height: 10vh;
 }
 
-#activity {
-  top: 15vh;
+#info {
+  top: 10vh;
   left: 0px;
-  width: 100vw;
-  height: 85vh;
+  width: 45vw;
+  height: 90vh;
+}
+
+#board {
+  top: 10vh;
+  right: 0px;
+  width: 55vw;
+  height: 80vh;
+}
+
+#controls {
+  bottom: 0px;
+  right: 0px;
+  width: 55vw;
+  height: 10vh;
 }
 

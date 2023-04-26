@@ -13,20 +13,19 @@ history.
   <title>Problems</title>                                   
   <link id="cssFile" rel="stylesheet" type="text/css" href="./style/problem.css">    
   <script src="./code.js"></script>
+  <script src="https://unpkg.com/monaco-editor@latest/min/vs/loader.js"></script>
 </head>                                                                         
   <body>
     <div id="header" class="box">
-      <h1>Problem: Two Sum<h1>
       <select id="problem_menu" value="Menu" onchange="location = this.value">
         <option value="">Menu</option>
         <option value="./userHome.html">Problem list</option>
         <option value="./index.html">Logout</option>
       </select>
     </div>
-    <!---    <div id="details" class="box"><h1>Details</h1></div> -->
-    <div id="activity" class="box">
-      <textarea id="desc"readonly>Hi area off limits!</textarea>
-      <textarea id="board"></textarea>
+    <div id="info" class="box"></div>
+    <div id="board" class="box"></div>
+    <div id="controls" class="box">
       <input type='submit' value="Execute your code" onclick="submitAndExecute()">
     </div>
   </body>                                                                         

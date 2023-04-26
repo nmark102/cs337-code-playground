@@ -119,8 +119,8 @@ app.get("/problems/download/", async function(req,res){
 })
 
 // Problem Load API
-app.get("/problem/get/", async function(req,res){
-  const problem = await Problem.find({name:"Two Sum"}).exec()
+app.get("/problem/get/:problem", async function(req,res){
+  const problem = await Problem.find({name: req.params.problem}).exec()
   if(problem.length !== 0){
     res.send(JSON.stringify(problem[0]));
   }

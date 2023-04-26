@@ -14,28 +14,17 @@ Purpose: Used to enter problem data into MongoDB.
   <script src="./code.js"></script>                                             
 </head>                                                                            
   <body>
-    <div id="clickbox" class="box">
-      <button class="button" onclick="uploadProblem()">Submit</button>
-    </div>
-    <div id="problem_box" class="box">                                                  
       <label for="Name"><b>Problem Name:</b></label>
-      <input type="text" id="Name" required>
-    </div>                                                                         
-    <div id="box1" class="box">                                                  
+      <input type="text" id="Name">
       <h1>Description<h1>                                                     
       <textarea id="desc">Enter problem description</textarea>                   
-    </div>                                                                         
-    <div id="box2" class="box">                                                
       <h1>Example 1<h1>                                                     
       <textarea id="exmp1">Enter problem example 1</textarea>                   
-    </div>                                                                         
-    <div id="box3" class="box">                                                
       <h1>Example 2<h1>                                                     
       <textarea id="exmp2">Enter problem example 2</textarea>                   
-    </div>                                                                         
-    <div id="box4" class="box">                                                
       <h1>Constraints<h1>                                                     
       <textarea id="constraints">Enter problem constraints</textarea>                   
-    </div>                                                                         
+      <button class="button" onclick="uploadProblem()">Add Problem</button>
+    </div>
   </body>                                                                         
 </html>                          

@@ -92,15 +92,24 @@ function uploadProblem() {
   let e1 = document.getElementById("exmp1").value;
   let e2 = document.getElementById("exmp2").value;
   let c = document.getElementById("constraints").value;
-  let data = {name: n, desc: d, example1: e1, example2: e2, constraints: c}
+  let data = {name: n, desc: d, example1: e1, example2: e2, constraints: c}  
+  if(n == "" || d == "") {
+    window.alert("Please enter problem name and problem description");
+    return ;
+  }
   let url = '/problem/add/'
   fetch(url,  {
     method: 'POST',                                                             
     body: JSON.stringify(data),                                                 
     headers: {"Content-Type": "application/json"}                               
   })
-  .then(() => {                                                                
-    window.alert('Problem added!');
+  .then(() => {               
+    if(response.ok) {
+      window.alert('Problem already exists');
+      return;
+    } else {
+      window.alert('Problem added!');
+    }
   })                                                                           
   .catch(() => {                                                               
     alert('something went wrong');                                              
@@ -147,9 +156,19 @@ function getProblem(p) {
   fetch(url)
   .then(response => (response.json()))
   .then(data => {
-    let text = `${data.name}\n${data.description}\n` + 
-      `${data.example1}\n${data.example2}\n` + `${data.constraints}`;
-    document.getElementById('desc').value = text;
+    let text = `<h1>${data.name}</h1><br>` + `<p>${data.description}</p><br>` + 
+      `<p>${data.example1}</p><br>` + `<p>${data.example2}</p><br>` + 
+      `<p>${data.constraints}</p>`;
+      document.getElementById('info').innerHTML = text;
+    require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@latest/min/vs' }});
+    require(['vs/editor/editor.main'], function() {
+    var editor = monaco.editor.create(document.getElementById('board'), {
+        value: 'function hello() {\n\talert("Hello, Monaco!");\n}',
+        theme: 'vs-dark',      
+        language: 'javascript'
+        });
+    });
+
   })
   .catch((error) => {
     console.error(error);
