@@ -7,6 +7,8 @@
  * server or implement function.
  */
 
+var codespace;
+
 /*** ------ Start index.hmtl functions ----------
 
 /*
@@ -146,6 +148,41 @@ function switchWindow(identifier){
   window.location.href = 'problem.html'
 //  getProblem(identifier);
 }
+
+
+/* 
+ * Select language for Monaco code editor api
+ *
+ * @param string, syntax language
+ */
+function selectLang(string) {
+  let v = "";
+  let l = "";
+  if(string == 'javascript') {
+    v = 'function hello() {\n\talert("Hello, Monaco!");\n}';
+    l = string;  
+  }
+  if(string == 'python') {
+    v = 'class Solution(object):\n\tdef main():';
+    l = string;
+  }
+  if(string == 'c') {
+    v = '#include <stdio>\n\n\nint main(argc, argv[])';
+    l = string;
+  }
+  monaco.editor.setModelLanguage(codespace.getModel(), string);
+  codespace.getModel().setValue(v);
+  
+}
+
+/* 
+ * Switch theme
+ *
+ */
+function theme() {
+ //TODO 
+}
+
 /*
  * Changes to problem window and uploads problem for user.
  *
@@ -162,20 +199,18 @@ function getProblem(p) {
       document.getElementById('info').innerHTML = text;
     require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@latest/min/vs' }});
     require(['vs/editor/editor.main'], function() {
-    var editor = monaco.editor.create(document.getElementById('board'), {
+        codespace = monaco.editor.create(document.getElementById('board'), {
         value: 'function hello() {\n\talert("Hello, Monaco!");\n}',
-        theme: 'vs-dark',      
+        theme: 'hc-black', 
         language: 'javascript'
         });
     });
-
   })
   .catch((error) => {
     console.error(error);
   })
 
 }
-
 
 /*** ------ Start problem.html functions ------------------*/
 function submitAndExecute(){

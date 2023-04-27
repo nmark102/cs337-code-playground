@@ -25,27 +25,37 @@ body {
   top: 0px;                                                                     
   left: 0px;                                                                    
   width: 100vw;                                                                 
-  height: 10vh;
+  height: 8vh;
 }
 
 #info {
-  top: 10vh;
+  top: 8vh;
   left: 0px;
   width: 45vw;
-  height: 90vh;
+  height: 92vh;
+}
+
+#lang {
+  background-color: #696969;
+  top: 8vh;
+  right: 0px;
+  height: 5vh;
+  width: 55vw;
+
 }
 
 #board {
-  top: 10vh;
+  top: 13vh;
   right: 0px;
   width: 55vw;
-  height: 80vh;
+  height: 79vh;
+  padding: 0px;
 }
 
 #controls {
   bottom: 0px;
   right: 0px;
   width: 55vw;
-  height: 10vh;
+  height: 8vh;
 }
 

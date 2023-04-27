@@ -17,13 +17,15 @@ history.
 </head>                                                                         
   <body>
     <div id="header" class="box">
-      <select id="problem_menu" value="Menu" onchange="location = this.value">
-        <option value="">Menu</option>
-        <option value="./userHome.html">Problem list</option>
-        <option value="./index.html">Logout</option>
-      </select>
+    <button onclick="location = './userHome.html'">Problem List</button>
+    <button onclick="location = './index.html'">Logout</button>
     </div>
     <div id="info" class="box"></div>
+    <div id="lang" class="box">
+      <button onclick="selectLang('javascript')">Javascript</button>
+      <button onclick="selectLang('python')">Python</button>
+      <button onclick="selectLang('c')">C</button>
+    </div>
     <div id="board" class="box"></div>
     <div id="controls" class="box">
       <input type='submit' value="Execute your code" onclick="submitAndExecute()">
