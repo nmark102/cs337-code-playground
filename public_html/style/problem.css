@@ -35,13 +35,22 @@ body {
   height: 92vh;
 }
 
-#lang {
+#pref {
   background-color: #696969;
+  padding: 0px;
   top: 8vh;
   right: 0px;
   height: 5vh;
   width: 55vw;
 
+}
+
+#lang {
+  float: left;
+}
+
+#theme {
+  float: right; 
 }
 
 #board {

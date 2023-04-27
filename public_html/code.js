@@ -179,8 +179,9 @@ function selectLang(string) {
  * Switch theme
  *
  */
-function theme() {
- //TODO 
+function theme(string) {
+  monaco.editor.setTheme(string);
+  codespace.layout();
 }
 
 /*
@@ -201,7 +202,7 @@ function getProblem(p) {
     require(['vs/editor/editor.main'], function() {
         codespace = monaco.editor.create(document.getElementById('board'), {
         value: 'function hello() {\n\talert("Hello, Monaco!");\n}',
-        theme: 'hc-black', 
+        theme: 'vs', 
         language: 'javascript'
         });
     });

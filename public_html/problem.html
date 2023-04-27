@@ -21,10 +21,17 @@ history.
     <button onclick="location = './index.html'">Logout</button>
     </div>
     <div id="info" class="box"></div>
-    <div id="lang" class="box">
-      <button onclick="selectLang('javascript')">Javascript</button>
-      <button onclick="selectLang('python')">Python</button>
-      <button onclick="selectLang('c')">C</button>
+    <div id="pref" class="box">
+      <div id="lang" class="minibox">
+        <button onclick="selectLang('javascript')">Javascript</button>
+        <button onclick="selectLang('python')">Python</button>
+        <button onclick="selectLang('c')">C</button>
+      </div>
+      <div id="theme" class="minibox">
+        <button onclick="theme('vs')">White</button>
+        <button onclick="theme('vs-dark')">Dark</button>
+        <button onclick="theme('hc-black')">High Contrast</button>
+      </div>
     </div>
     <div id="board" class="box"></div>
     <div id="controls" class="box">
