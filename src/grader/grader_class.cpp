@@ -230,14 +230,17 @@ int Grader::execute() {
             exec_cmd += "python3 " + SUBMISSIONS_BASE_DIR + submission_id + "/main.py ";
         }
         
+        // Add brackets around exec cmd before piping
+        exec_cmd = "(" + exec_cmd + ") ";
+
         // Pipe input from the testcase path;
         exec_cmd += "< " + testcase; 
 
         // Pipe stdout
-        exec_cmd += " 1> " + SUBMISSIONS_BASE_DIR + submission_id + "/" + testcase_name + ".out";
+        exec_cmd += " 1>" + SUBMISSIONS_BASE_DIR + submission_id + "/" + testcase_name + ".out";
 
         // Pipe stderr
-        exec_cmd += " 2> " + SUBMISSIONS_BASE_DIR + submission_id + "/" + testcase_name + ".err";
+        exec_cmd += " 2>" + SUBMISSIONS_BASE_DIR + submission_id + "/" + testcase_name + ".err";
 
         // Printing exec cmd for debugging purposes
         #ifdef VERBOSE_MODE
@@ -265,9 +268,10 @@ int Grader::execute() {
         // Check if the submission's output matches the expected output
         
         // Configure diff and expected output
-        string diff_cmd = "diff -b " + testcase_path + "/" + testcase_name + ".expected_output ";
+        string diff_cmd = "diff -wB " + testcase_path + testcase_name + ".expected_output ";
         // Configure actual output
-        diff_cmd += SUBMISSIONS_BASE_DIR + submission_id + "/" + testcase_name + ".out"
+        diff_cmd += SUBMISSIONS_BASE_DIR + submission_id + "/" + testcase_name + ".out";
+        // Configure diff output file
         + " > " + SUBMISSIONS_BASE_DIR + submission_id + "/" + testcase_name + ".diff";
 
         cout << "Comparing answers using: " << diff_cmd << endl;

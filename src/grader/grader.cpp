@@ -66,5 +66,6 @@ int main(int argc, char* argv[]) {
     int execute_status = grader->execute();
     delete grader;
 
+    cout << "Grader exited with status: " << execute_status << endl;
     return execute_status;
 }

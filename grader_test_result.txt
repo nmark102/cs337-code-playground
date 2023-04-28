@@ -1,0 +1,65 @@
+Testing grader
+==============
+Testcase 0: Language: C. Expected status 0 (accepted).
+submissions/0/main.c: In function ‘main’:
+submissions/0/main.c:5:5: warning: ignoring return value of ‘scanf’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+    5 |     scanf("%d %d", &a, &b);
+      |     ^~~~~~~~~~~~~~~~~~~~~~
+Compiling with command: gcc -O2 -fno-omit-frame-pointer -fsanitize=address submissions/0/main.c -o submissions/0/a.out 
+Compiled successfully 
+
+Finding testcases from testcases/1-add-two-numbers/ 
+Testcases to be executed: 
+    testcases/1-add-two-numbers/1-add-two-numbers-1.stdin 
+    testcases/1-add-two-numbers/1-add-two-numbers-2.stdin 
+    
+Parsed testcase name: 1-add-two-numbers-1 
+Executing: (timeout 1s submissions/0/a.out ) 
+    < testcases/1-add-two-numbers/1-add-two-numbers-1.stdin 
+    1>submissions/0/1-add-two-numbers-1.out 
+    2>submissions/0/1-add-two-numbers-1.err 
+    
+    (NOTE: THIS IS THE STDOUT FROM THE TESTCASE) 3
+    
+Ran testcase 1-add-two-numbers-1 successfully. 
+    
+Comparing answers using: 
+diff -wB testcases/1-add-two-numbers//1-add-two-numbers-1.expected_output submissions/0/1-add-two-numbers-1.out 
+
+    (DIFF OUTPUT): 1d0 < 3 \ No newline at end of file 
+    
+Grader exited with status: 3
+0
+
+Testcase 1: Language: Python. Expected status 0 (accepted).
+
+Compiled successfully 
+
+Traceback (most recent call last):
+  File "/mnt/c/Users/ntri2/OneDrive/Desktop/CLASSDOC/CS337/cs337-code-playground/submissions/1/main.py", line 1, in <module>
+    a = int(input())
+ValueError: invalid literal for int() with base 10: '1 2'
+Finding testcases from testcases/1-add-two-numbers/ Testcases to be executed: testcases/1-add-two-numbers/1-add-two-numbers-1.stdin testcases/1-add-two-numbers/1-add-two-numbers-2.stdin Parsed testcase name: 1-add-two-numbers-1 Executing: (timeout 2.000000s python3 submissions/1/main.py ) < testcases/1-add-two-numbers/1-add-two-numbers-1.stdin 1>submissions/1/1-add-two-numbers-1.out 2>submissions/1/1-add-two-numbers-1.err Ran testcase 1-add-two-numbers-1 successfully. Comparing answers using: diff -wB testcases/1-add-two-numbers//1-add-two-numbers-1.expected_output submissions/1/1-add-two-numbers-1.out 1d0 < 3 \ No newline at end of file Grader exited with status: 3
+0
+
+Testcase 2: Language: Java. Expected status 1 (compile error).
+submissions/2/Main.java:3: error: cannot find symbol
+        NONEXISTENT_FUNCTION();
+        ^
+  symbol:   method NONEXISTENT_FUNCTION()
+  location: class Main
+1 error
+ERROR: Compilation failed.
+Compiling with command: javac submissions/2/Main.java
+0
+
+Testcase 3: Language: C. Expected status 4 (time limit exceeded).
+Compiling with command: gcc -O2 -fno-omit-frame-pointer -fsanitize=address submissions/3/main.c -o submissions/3/a.out Compiled successfully Finding testcases from testcases/1-add-two-numbers/ Testcases to be executed: testcases/1-add-two-numbers/1-add-two-numbers-1.stdin testcases/1-add-two-numbers/1-add-two-numbers-2.stdin Parsed testcase name: 1-add-two-numbers-1 Executing: (timeout 1s submissions/3/a.out ) < testcases/1-add-two-numbers/1-add-two-numbers-1.stdin 1>submissions/3/1-add-two-numbers-1.out 2>submissions/3/1-add-two-numbers-1.err Ran testcase 1-add-two-numbers-1 successfully. Comparing answers using: diff -wB testcases/1-add-two-numbers//1-add-two-numbers-1.expected_output submissions/3/1-add-two-numbers-1.out 1d0 < 3 \ No newline at end of file Grader exited with status: 3
+0
+
+Testcase 4: Language: Python. Expected status 2 (wrong answer).
+Traceback (most recent call last):
+  File "/mnt/c/Users/ntri2/OneDrive/Desktop/CLASSDOC/CS337/cs337-code-playground/submissions/4/main.py", line 1, in <module>
+    a = int(input())
+ValueError: invalid literal for int() with base 10: '1 2'
+Compiled successfully Finding testcases from testcases/1-add-two-numbers/ Testcases to be executed: testcases/1-add-two-numbers/1-add-two-numbers-1.stdin testcases/1-add-two-numbers/1-add-two-numbers-2.stdin Parsed testcase name: 1-add-two-numbers-1 Executing: (timeout 2.000000s python3 submissions/4/main.py ) < testcases/1-add-two-numbers/1-add-two-numbers-1.stdin 1>submissions/4/1-add-two-numbers-1.out 2>submissions/4/1-add-two-numbers-1.err Ran testcase 1-add-two-numbers-1 successfully. Comparing answers using: diff -wB testcases/1-add-two-numbers//1-add-two-numbers-1.expected_output submissions/4/1-add-two-numbers-1.out 1d0 < 3 \ No newline at end of file Grader exited with status: 3
