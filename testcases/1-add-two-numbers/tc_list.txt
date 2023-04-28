@@ -1,1 +1,2 @@
 testcases/1-add-two-numbers/1-add-two-numbers-1.stdin
+testcases/1-add-two-numbers/1-add-two-numbers-2.stdin
