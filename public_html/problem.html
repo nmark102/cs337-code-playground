@@ -17,25 +17,29 @@ history.
 </head>                                                                         
   <body>
     <div id="header" class="box">
-    <button onclick="location = './userHome.html'">Problem List</button>
-    <button onclick="location = './index.html'">Logout</button>
+      <h1 id="logo" class="label">Code Playground</h1>
+      <button class="button" onclick="location = './userHome.html'">Home</button>
+      <button class="button" id="logout" onclick="location = './index.html'">Logout</button>
     </div>
     <div id="info" class="box"></div>
+    <div id="console"></div>
     <div id="pref" class="box">
       <div id="lang" class="minibox">
-        <button onclick="selectLang('javascript')">Javascript</button>
-        <button onclick="selectLang('python')">Python</button>
-        <button onclick="selectLang('c')">C</button>
+        <h3 class="label">Syntax: </h3>
+        <button class="button" onclick="selectLang('javascript')">Javascript</button>
+        <button class="button" onclick="selectLang('python')">Python</button>
+        <button class="button" onclick="selectLang('c')">C</button>
       </div>
-      <div id="theme" class="minibox">
-        <button onclick="theme('vs')">White</button>
-        <button onclick="theme('vs-dark')">Dark</button>
-        <button onclick="theme('hc-black')">High Contrast</button>
+      <div id="controls" class="minibox">
+        <button class="button" id="run"onclick="submitAndExecute()">Run</button>
       </div>
     </div>
     <div id="board" class="box"></div>
-    <div id="controls" class="box">
-      <input type='submit' value="Execute your code" onclick="submitAndExecute()">
-    </div>
+      <div id="theme" class="box">
+        <h3 class="label">Color Themes: </h3>
+        <button class="button" onclick="theme('vs')">White</button>
+        <button class="button" onclick="theme('vs-dark')">Dark</button>
+        <button class="button" onclick="theme('hc-black')">High Contrast</button>
+      </div>
   </body>                                                                         
 </html>                

@@ -194,7 +194,7 @@ function getProblem(p) {
   fetch(url)
   .then(response => (response.json()))
   .then(data => {
-    let text = `<h1>${data.name}</h1><br>` + `<p>${data.description}</p><br>` + 
+    let text = `<h2>${data.name}</h2><br>` + `<p>${data.description}</p><br>` + 
       `<p>${data.example1}</p><br>` + `<p>${data.example2}</p><br>` + 
       `<p>${data.constraints}</p>`;
       document.getElementById('info').innerHTML = text;
@@ -202,7 +202,7 @@ function getProblem(p) {
     require(['vs/editor/editor.main'], function() {
         codespace = monaco.editor.create(document.getElementById('board'), {
         value: 'function hello() {\n\talert("Hello, Monaco!");\n}',
-        theme: 'vs', 
+        theme: 'vs-dark', 
         language: 'javascript'
         });
     });
@@ -215,9 +215,10 @@ function getProblem(p) {
 
 /*** ------ Start problem.html functions ------------------*/
 function submitAndExecute(){
-  let code = document.getElementById("board").value
-  console.log(code);
-  url = "/problem/execute/"
+  let code = codespace.getValue(); // Gets string from monaco editor
+  alert(code);
+
+/*  url = "/problem/execute/"
   data = {codeData: code, language: "python3", testcase: ""};
   fetch(url, {
     method: 'POST',                                                             
@@ -233,7 +234,7 @@ function submitAndExecute(){
   .catch(() => {                                                               
     alert('something went wrong');                                              
   });  
-
+*/
 }
 /*** ------ End problem.html functions -------------*/
 

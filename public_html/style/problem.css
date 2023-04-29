@@ -11,12 +11,59 @@ Purpose: Add style to the problem.css page for website.
 }
 
 body {
+  color: white;
   margin: 0px;
+}
+/* buttons */
+.button {
+  display: inline-block;
+  border: none;
+  font-size: .9vw;
+  color: white; 
+  background-color: rgb(232, 162, 9, 0.4);
+  margin: 5px 5px;
+  padding: 2px 10px;
+  border-radius: 15%;
+  cursor: pointer;
+  transition-duration: 0.4s;
+}
+
+.button:hover {
+ background-color: rgb(232, 162, 9, 0.9); 
+}
+
+#run {
+  background-color: rgb(2, 189, 8, 0.4);
+}
+
+#run:hover {
+  background-color: rgb(2, 189, 8, 0.9);
+}
+
+#logout {
+  background-color: rgb(250, 2, 2, 0.4);
+}
+
+#logout:hover {
+  background-color: rgb(250, 2, 2, 0.9);
+}
+
+.label {
+  display: inline-block;
+  margin: 0px; 
+}
+
+/* end buttons*/
+
+#logo {
+  float: left;
+  color: rgb(0, 45, 194);
 }
 
 .box {
+  background-color: black;
   position: fixed;                                                                 
-  border: 2px solid black;                                                         
+  border: 2px solid #555555;                                                         
   padding: 10px;                                                                   
   overflow-y: scroll;        
 }
@@ -24,7 +71,8 @@ body {
 #header {
   top: 0px;                                                                     
   left: 0px;                                                                    
-  width: 100vw;                                                                 
+  width: 100vw;
+  text-align: right;   
   height: 8vh;
 }
 
@@ -36,7 +84,6 @@ body {
 }
 
 #pref {
-  background-color: #696969;
   padding: 0px;
   top: 8vh;
   right: 0px;
@@ -49,7 +96,7 @@ body {
   float: left;
 }
 
-#theme {
+#controls {
   float: right; 
 }
 
@@ -61,7 +108,7 @@ body {
   padding: 0px;
 }
 
-#controls {
+#theme {
   bottom: 0px;
   right: 0px;
   width: 55vw;
