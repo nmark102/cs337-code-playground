@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Default settings
+SUBMISSIONS_BASE_DIR="~/submissions/"
+TESTCASES_BASE_DIR="~/testcases/"
+DEFAULT_GCC_ARGS="-O2 -fno-omit-frame-pointer -fsanitize=address "
+DEFAULT_GPP_ARGS="-O2 -fno-omit-frame-pointer -fsanitize=address "
+
 # Set up default return codes
 GRADER_CRASHED=-1
 ACCEPTED=0
@@ -13,19 +19,76 @@ MEMORY_LIMIT_EXCEEDED=5
 SUBMISSION_ID=
 LANGUAGE=
 PROBLEM_ID=
+TIME_LIMIT=
+MEM_LIMIT=
 
 # Parse arguments
-# Set language with -l
-for arg in $@; do
-    if [ ${arg:0:2} == "-l" ] then
-        LANGUAGE=${arg:2}
-    fi
+
+i=1
+while [ $i -le $# ]
+do
+    case ${!i} in
+        -s)
+            if [ $((i+1)) -gt $# ] then
+                echo "Submission ID not specified"
+                exit ${GRADER_CRASHED}
+            else
+                i=$((i+1))
+                SUBMISSION_ID=${!i}
+            fi
+            ;;
+        -l)
+            if [ $((i+1)) -gt $# ] then
+                echo "Language not specified"
+                exit ${GRADER_CRASHED}
+            else
+                i=$((i+1))
+                LANGUAGE=${!i}
+            fi
+            ;;
+        -T)
+            if [ $((i+1)) -gt $# ] then
+                echo "Problem ID not specified"
+                exit ${GRADER_CRASHED}
+            else
+                i=$((i+1))
+                PROBLEM_ID=${!i}
+            fi
+            ;;
+        -t)
+            if [ $((i+1)) -gt $# ] then
+                echo "Time limit not specified"
+                exit ${GRADER_CRASHED}
+            else
+                i=$((i+1))
+                TIME_LIMIT=${!i}
+            fi
+            ;;
+        -m)
+            if [ $((i+1)) -gt $# ] then
+                echo "Memory limit not specified"
+                exit ${GRADER_CRASHED}
+            else
+                i=$((i+1))
+                MEM_LIMIT=${!i}
+            fi
+            ;;
+        *)
+            i=$((i+1))
+            ;;
+    esac
+    i=$((i+1))
 done
 
-# Set submission with -s
-# Set problem with -T
-
 # Set up default values
+
+if [ ${TIME_LIMIT}=="" ] then
+    TIME_LIMIT="1s"
+fi
+
+if [ ${MEM_LIMIT}=="" ] then
+    MEM_LIMIT="64m"
+fi
 
 # Make sure that submission, language, and problem are specified
 if   [ ${SUBMISSION_ID}=="" ] then
@@ -42,13 +105,13 @@ fi
 # Compile
 case ${LANGUAGE} in
     c)
-        gcc -o submission submission.c
+        gcc ${DEFAULT_GCC_ARGS} -o ~/submissions/${SUBMISSION_ID}/a.out ~/submissions/${SUBMISSIONS_ID}/main.c
         ;;
     cpp)
-        g++ -o submission submission.cpp
+        g++ ${DEFAULT_GPP_ARGS} -o ~/submissions/${SUBMISSIONS_ID}/a.out ~/submissions/${SUBMISSIONS_ID}/main.cpp
         ;;
     java)
-        javac submission.java
+        javac ~/submissions/${SUBMISSION_ID}/Main.java
         ;;
     python)
         # Nothing to compile
