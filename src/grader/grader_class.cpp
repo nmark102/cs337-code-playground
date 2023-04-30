@@ -194,10 +194,12 @@ int Grader::execute() {
         return GRADER_CRASHED;
     }
 
+    #ifdef VERBOSE_MODE
     cout << "Testcases to be executed: " << endl;
     for (string testcase: tc_list) {
         cout << testcase << endl;
     }
+    #endif
 
     // Actually execute the submission
     string base_exec_cmd = "timeout " + time_limit;
@@ -237,7 +239,7 @@ int Grader::execute() {
         exec_cmd += "< " + testcase; 
 
         // Pipe stdout
-        exec_cmd += " 1>" + SUBMISSIONS_BASE_DIR + submission_id + "/" + testcase_name + ".out";
+        exec_cmd += " >" + SUBMISSIONS_BASE_DIR + submission_id + "/" + testcase_name + ".out";
 
         // Pipe stderr
         exec_cmd += " 2>" + SUBMISSIONS_BASE_DIR + submission_id + "/" + testcase_name + ".err";
@@ -246,7 +248,9 @@ int Grader::execute() {
         #ifdef VERBOSE_MODE
         cout << "Executing: " << exec_cmd << endl;
         #endif
-        int exec_status = system(exec_cmd.c_str());
+        // int exec_status = system(exec_cmd.c_str());
+        // Temporary changing to execl
+        int exec_status = execl("/bin/bash", "bash", "-c", exec_cmd.c_str(), NULL);
 
         // Check if the submission timed out
         if (exec_status == TIMEOUT_EXIT_CODE) {

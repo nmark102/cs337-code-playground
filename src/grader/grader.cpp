@@ -25,7 +25,6 @@ using namespace std;
 extern const string DEFAULT_GCC_ARGS;
 
 int main(int argc, char* argv[]) {
-    
     // Probe if shell is available
     if (system(NULL) == 0) {
         cerr << "Shell is unavailable" << endl;

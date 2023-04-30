@@ -26,8 +26,8 @@ const string DEFAULT_TIME_LIMIT = "1s ";
 const string DEFAULT_MEM_LIMIT = "64m ";
 
 // Default file paths
-const string SUBMISSIONS_BASE_DIR = "submissions/";
-const string TESTCASES_BASE_DIR = "testcases/";
+const string SUBMISSIONS_BASE_DIR = "~/submissions/";
+const string TESTCASES_BASE_DIR = "~/testcases/";
 
 // Function headers
 void readlines(vector<string>* dest, const string filename);
