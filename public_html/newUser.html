@@ -11,7 +11,7 @@ Purpose: Create a webpage for new users to create an account to Coding website
   <meta charset="UTF-8">                                                        
   <title>Create new Account </title>                                                          
   <link id="cssFile" rel="stylesheet" type="text/css" href="./style/newUser.css">              
-  <script src="./code.js"></script>
+  <script src="./login.js"></script>
 </head>                                                                         
   <body>
     <div id="header" class="box">
@@ -31,7 +31,7 @@ Purpose: Create a webpage for new users to create an account to Coding website
       <label for="password">Password</label>                                    
       <input type="password" id="password" name="password" pattern=".{8,}" required><br><br>
       
-      <input type='submit' value="Create" onclick="create()">                
+      <input type='submit' value="Create" onclick="createAccount()">                
       <div id="error"></div><br><br>     
     </div>
   </body>                                                                         

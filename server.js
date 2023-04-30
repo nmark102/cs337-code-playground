@@ -1,22 +1,20 @@
-// Server Setup
-
-// Imports and Server Setup
-const express  = require('express');
-const parser = require('body-parser');
-const exec = require('child_process').exec;
-const app = express();
-const port = 3000;
+// Imports
 const mongoose = require('mongoose');
+const express = require('express');
+const cookieParser = require('cookie-parser');
 const fs = require('fs');
+const crypto = require('crypto');
+const cm = require('./customsessions');
 const Schema = mongoose.Schema
-const url = "mongodb+srv://nishant3j:dKbkythUhL31a5EL@cluster337.jn1tr0y.mongodb.net/test"
-app.use(express.static('public_html'));
-app.use(express.json());
+const port = 3000;
+global.__basedir = __dirname;
 
-// Database Connection setup
+cm.sessions.startCleanup();
 
-mongoose.connect(url, { useNewUrlParser: true })
+// Database connection
+const url = 'mongodb+srv://nishant3j:dKbkythUhL31a5EL@cluster337.jn1tr0y.mongodb.net/test';
 
+mongoose.connect(url);
 const db = mongoose.connection
 db.once('open', _ => {
   console.log('Database connected:', url)
@@ -26,19 +24,18 @@ db.on('error', err => {
   console.error('connection error:', err)
 })
 
-
-// Schema setup
+// Schemas and Models
 
 // User Schema
 const Users = new Schema({
-  name:String,  // Name
-  password:String,// Password
-  // Salt 
-  // Hash
-  email:String,// email
+  username:String,  // Name
+  // password:String,  // Password
+  salt: Number, // Salt
+  hash: String, // Hash
+  email:String, // email
   problemlist:[Schema.Types.ObjectId]// ProblemList (A list of problem instances)
-  // 
 });
+const User = mongoose.model('User', Users);
 
 // Problem Schema
 const Problems = new Schema({
@@ -49,6 +46,7 @@ const Problems = new Schema({
   example2: String,
   constraints: String// Sample input
 });
+const Problem = mongoose.model('Problem', Problems);
 
 // Problem Instance Schema
 const ProblemInstance = new Schema({
@@ -58,55 +56,52 @@ const ProblemInstance = new Schema({
 });
 
 // Submission Schema
-const Submission = new Schema({
+const Submissions = new Schema({
     // problem id
     language: String,
     testcase: String
     // timestamp
     // Code
 });
+const Submission = mongoose.model('Submission', Submissions);
 
-// Setting up models
+// Authentication Middleware
 
-const Problem = mongoose.model('Problem', Problems);
-const User = mongoose.model("User", Users);
-
-
-// Server Routes
-
-// Login Auth
-app.post("/user/auth/", async function(req,res){
-  userData = req.body;
-  const temp = await User.find({name:userData.username}).exec()
-  if(temp !== []){
-    if(temp[0].password === userData.password){
-      res.send("OK");
+function authenticate(req, res, next) {
+  let c = req.cookies;
+  if (c && c.login) {
+    let result = cm.sessions.doesUserHaveSession(c.login.username, c.login.sid);
+    if (result) {
+      next();
+      return;
     }
-    else{
-      res.send("NOPASS");
-    }
-    // Set current user to the this one
   }
-  else{
-    res.send("NOPE");
-  }
-});
+  console.log('redirecting');
+  res.redirect('/index.html');
+}
 
-// Create User API
-app.post("/user/createAccount/", async function(req,res){
-  userData = req.body;
-  const Usr = new User({
-    name:userData.username,  // Name
-    password:userData.password,// Password
-  // Salt 
-  // Hash
-    email:userData.email,// email
-    problemlist:[]
-  });
-  Usr.save();
-  console.log("Saved");
-  res.send("OK");
-})
+/**
+ * Initialize the express app and configure with various features 
+ * such as JSON parsing, static file serving, etc.
+ */
+const app = express();
+app.use(cookieParser());    
+app.use('/app/*', authenticate);
+app.use(express.static('public_html'))
+//app.get('/', (req, res) => { res.redirect('/app/index.html'); });
+app.use(express.json())
+//app.use(parser.text({type: '*/*'}));
+
+// app.use('*', (req, res, next) => {
+//   let c = req.cookies;
+//   if (c && c.login) {
+//     if (cm.sessions.doesUserHaveSession(c.login.username, c.login.sid)) {
+//       cm.sessions.addOrUpdateSession(c.login.username);
+//     }
+//   }
+//   console.log("Whaaatttt");
+//   res.redirect("/userHome.html");
+// });
 
 // Problem List API
 app.get("/problems/download/", async function(req,res){
@@ -126,129 +121,78 @@ app.get("/problem/get/:problem", async function(req,res){
   }
 })
 
-app.post("/problem/execute/", async function(req, res) { // Program execution API
-  userData = req.body;
-  code = userData.code;
-  verdictDict = {0: "Accepted",
-    1: "Compile error",
-    2:" Runtime error",
-    3: "Wrong answer",
-    4: "Time limit exceeded",
-    5: "Memory limit exceeded"}
-  
-  // TODO: use the code to run the code and store the status in the variable
-  var submission = new Submission({
-    // Extract source code, language, and chosen problemset to create a new submission
-    language: userData.language,
-    testcase: userData.testcase,
-    code: userData.code
-  }).save()
-  .then(item => {
-    // Write the source code
-    var srcPath = "./submissions/" + item._id + "/";
+/**
+ * This route is for creating a new user account.
+ */
+app.get('/account/create/:username/:password/:email', (req, res) => {
+  let p1 = User.find({username: req.params.username}).exec();
+  p1.then( (results) => { 
+    if (results.length > 0) {
+      res.end('Username already exists.');
+    } else {
+      let newSalt = Math.floor((Math.random() * 1000000));
+      let toHash = req.params.password + newSalt;
+      var hash = crypto.createHash('sha3-256');
+      let data = hash.update(toHash, 'utf-8');
+      let newHash = data.digest('hex');
 
-    switch (item.language) {
-        case "python3":
-            srcPath += "main.py";
-            break;
-        case "java":
-            srcPath += "Main.java";
-            break;
-        case "c":
-            srcPath += "main.c";
-            break;
-        case "cpp":
-            srcPath += "main.cpp";
-            break;
-        default:
-            console.log("ERROR: Language " + item.language + " not supported");
-            return;
+      var newUser = new User({ 
+        username: req.params.username,
+        salt: newSalt,
+        hash: newHash,
+        email: req.params.email
+      });
+      newUser.save().then( (doc) => { 
+          res.end('Created new account!');
+          console.log("AnD");
+        }).catch( (err) => { 
+          console.log(err);
+
+        console.log("BnD");
+          res.end('Failed to create new account.');
+        });
     }
-
-    fs.writeFile(srcPath, item.code, function(err) {
-        if (err) {
-            console.log(err);
-            return;
-        }
-    });
-
-  })
-  .then( gradeSubmission(submission._id) )
-  .then(verdict => {
-    res.send(verdictDict[verdict]);
-  })
-  .catch(err => {
-    console.error(err);
+  });
+  p1.catch( (error) => {
+    console.log("DnD");
+    res.end('Failed to create new account.');
   });
 });
-
-// Add Problem API
-
-app.post("/problem/add/", async function(req,res){
-  userData = req.body;
-  queryName = req.params.USERNAME;
-  const prob = new Problem({
-    name:userData.name,
-    description: userData.desc,// Description
-  // A list of two examples
-    example1: userData.example1,
-    example2: userData.example2,
-    constraints: userData.constraints
-  });
-  prob.save();
-  console.log("Saved");
-  res.send("OK");
-});
-
 
 /**
- * function gradeSubmission: Grade the submission
- * 
- * Save the source code to ~/submissions/{submissionId}/. Expected source code file names:
- * Python:  main.py
- * Java:    Main.java
- * C:       main.c
- * C++:     main.cpp
- * 
- * @param {*} submissionId: String.
- * 
- * @returns: A number representing the grader verdict, where:
- * 0 = Accepted
- * 1 = Compile Error or Compile Time Exceeded (default limit: 30 seconds)
- * 2 = ???
- * 3 = ???
- * 4 = TBD
+ * Process a user login request.
  */
-async function gradeSubmission(submissionId) {
-    
-    await Submission.findById(submissionId, function(err, submission) {
-        if (err) {
-            console.log(err);
-            return;
-        }
+app.get('/account/login/:username/:password/', (req, res) => {
+  let u = req.params.username;
+  let p = req.params.password;
+  let p1 = User.find({username:u}).exec();
+  p1.then( (results) => { 
+    if (results.length == 1) {
 
-        var submissionArg = "-s " + submission._id + " ";
-        var languageArg = "-l " + submission.language + " ";
-        var testcaseArg = "-T " + submission.testcase + " ";
+      let existingSalt = results[0].salt;
+      let toHash = req.params.password + existingSalt;
+      var hash = crypto.createHash('sha3-256');
+      let data = hash.update(toHash, 'utf-8');
+      let newHash = data.digest('hex');
+      
+      if (newHash == results[0].hash) {
+        let id = cm.sessions.addOrUpdateSession(u);
+        res.cookie("login", {username: u, sid: id}, {maxAge: 600*60*24});
+        res.end('SUCCESS');
+      } else {
+        res.end('password was incorrect');
+      }
+    } else {
+      res.end('login failed');
+    }
+  });
+  p1.catch( (error) => {
+    res.end('login failed');
+  });
+});
 
-        exec("./bin/grader " + submissionArg + languageArg + testcaseArg, (err, stdout, stderr) => {
-            if (err) {
-                console.error(err);
-                return;
-            }
-            return stdout;
-        }
-    )})
-    .then(verdict => {
-        return Number(verdict)
-    })
-    .catch(err => {
-        console.error(err);
-    });  
-
-}
 
 // Set up the listen
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}/`);
+  console.log(`Server running at http://localhost:${port}/`);
 });

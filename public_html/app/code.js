@@ -14,45 +14,30 @@ var codespace;
 /*
  * Chanaes window to webpage for user to create new profile.
  */
-function newUser() {  
-  window.location.href = './newUser.html';
-}
 
 /*
  * Sends request to server for login.
  */
 function login() {
-  let userName = document.getElementById("username").value;
-  let passWord = document.getElementById("password").value;
-  if(userName == "" || passWord == "") {
-    window.alert("empty fields");
-    return ;
-  }
-  let data = {username: userName, password: passWord};
-  url = "/user/auth/"
-  fetch(url,  {
-    method: 'POST',                                                             
-    body: JSON.stringify(data),                                                 
-    headers: {"Content-Type": "application/json"}                               
-  })
+  console.log("login");
+  let u = document.getElementById('username').value;
+  let p = document.getElementById('password').value;
+  let url = '/account/login/' + u + '/' + encodeURIComponent(p);
+  fetch(url)
   .then((response) => {
     return response.text();
   })
-  .then((text) => {   
-    console.log(text);                                                             
-    if(text === "OK"){
-      window.location.href = './userHome.html';
-      // console.log("Bruh Moment");
-    }
-    else if(text === "NOPASS"){
-      window.alert("Wrong Password");
+  .then((text) => {
+    if(text == 'SUCCESS') {
+      window.location.href = './index.html';
+    } else {
+      window.alert('Login failed');
     }
   })
-  .catch((error) => {
-    window.alert("Server issue logging in");
-    console.log(error);
-  });
 }
+
+
+
 /*** ------ End index.html functions  ------------*/
 
 
@@ -62,28 +47,27 @@ function login() {
  * Changes window to webpage for user to create new profile.                       
  */                                                                                
 
-function create() {            
-  let userName = document.getElementById("username").value;
-  let passWord = document.getElementById("password").value;          
-  let primaryEmail = document.getElementById("primaryEmail").value;
-  if(userName == "" || passWord == "" || primaryEmail == "") {
-    window.alert("empty fields");
-    return ;
-  }
-  let data = {username: userName, password: passWord, email:primaryEmail};
-  let url = "/user/createAccount/"  
-  fetch(url,{
-    method: 'POST',                                                             
-    body: JSON.stringify(data),                                                 
-    headers: {"Content-Type": "application/json"}                               
-  })     
-  .then(() => {                                                                
-    window.alert('New User Created! Log In');                                                         
-    window.location.href = './index.html';
-  })                                                                           
-  .catch(() => {                                                               
-    alert('something went wrong');                                              
-  });                                                                           
+function createAccount() {
+  let u = document.getElementById('username').value;
+  let p = document.getElementById('password').value;
+  let e = document.getElementById('primaryEmail').value;
+  console.log(u);
+  console.log(p);
+  console.log(e);
+  let url = '/account/create/' + u + '/' + encodeURIComponent(p) + '/' + e;
+  fetch(url)
+  .then((response) => {
+    console.log(response);
+    return response.text();
+  })
+  .then((text) => {
+    if(text == 'Created new account!') {
+      window.location.href = './userHome.html';
+    } else {
+      window.alert('Failed to create new account');
+    }
+    window.alert(text);
+  })
 }
 /*** ------ End newUser.html functions -----------*/
 
