@@ -29,7 +29,7 @@ while [ $i -le $# ]
 do
     case ${!i} in
         -s)
-            if [ $((i+1)) -gt $# ] then
+            if [ $((i+1)) -gt $# ]; then
                 echo "Submission ID not specified"
                 exit ${GRADER_CRASHED}
             else
@@ -38,7 +38,7 @@ do
             fi
             ;;
         -l)
-            if [ $((i+1)) -gt $# ] then
+            if [ $((i+1)) -gt $# ]; then
                 echo "Language not specified"
                 exit ${GRADER_CRASHED}
             else
@@ -47,7 +47,7 @@ do
             fi
             ;;
         -T)
-            if [ $((i+1)) -gt $# ] then
+            if [ $((i+1)) -gt $# ]; then
                 echo "Problem ID not specified"
                 exit ${GRADER_CRASHED}
             else
@@ -56,7 +56,7 @@ do
             fi
             ;;
         -t)
-            if [ $((i+1)) -gt $# ] then
+            if [ $((i+1)) -gt $# ]; then
                 echo "Time limit not specified"
                 exit ${GRADER_CRASHED}
             else
@@ -65,7 +65,7 @@ do
             fi
             ;;
         -m)
-            if [ $((i+1)) -gt $# ] then
+            if [ $((i+1)) -gt $# ]; then
                 echo "Memory limit not specified"
                 exit ${GRADER_CRASHED}
             else
@@ -80,24 +80,30 @@ do
     i=$((i+1))
 done
 
+echo "Problem:      ${PROBLEM_ID}"
+echo "Submission:   ${SUBMISSION_ID}"
+echo "Language:     ${LANGUAGE}"
+echo "Time limit:   ${TIME_LIMIT}"
+echo "Memory limit: ${MEM_LIMIT}"
+
 # Set up default values
 
-if [ ${TIME_LIMIT}=="" ] then
+if [ ${TIME_LIMIT}=="" ]; then
     TIME_LIMIT="1s"
 fi
 
-if [ ${MEM_LIMIT}=="" ] then
+if [ ${MEM_LIMIT}=="" ]; then
     MEM_LIMIT="64m"
 fi
 
 # Make sure that submission, language, and problem are specified
-if   [ ${SUBMISSION_ID}=="" ] then
+if   [ ${SUBMISSION_ID}=="" ]; then
     echo "Submission ID not specified"
     exit ${GRADER_CRASHED}
-elif [ ${LANGUAGE}=="" ] then
+elif [ ${LANGUAGE}=="" ]; then
     echo "Language not specified"
     exit ${GRADER_CRASHED}
-elif [ ${PROBLEM_ID}=="" ] then
+elif [ ${PROBLEM_ID}=="" ]; then
     echo "Problem ID not specified"
     exit ${GRADER_CRASHED}
 fi
