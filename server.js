@@ -196,3 +196,129 @@ app.get('/account/login/:username/:password/', (req, res) => {
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);
 });
+
+
+
+// TODO: Mark all yours from here on out 
+
+app.post("/problem/execute/", async function(req, res) { // Program execution API
+  userData = req.body;
+  code = userData.code;
+  verdictDict = {0: "Accepted",
+    1: "Compile error",
+    2:" Runtime error",
+    3: "Wrong answer",
+    4: "Time limit exceeded",
+    5: "Memory limit exceeded"}
+  
+  // TODO: use the code to run the code and store the status in the variable
+  var submission = new Submission({
+    // Extract source code, language, and chosen problemset to create a new submission
+    language: userData.language,
+    testcase: userData.testcase,
+    code: userData.code
+  }).save()
+  .then(item => {
+    // Write the source code
+    var srcPath = "./submissions/" + item._id + "/";
+
+    switch (item.language) {
+        case "python3":
+            srcPath += "main.py";
+            break;
+        case "java":
+            srcPath += "Main.java";
+            break;
+        case "c":
+            srcPath += "main.c";
+            break;
+        case "cpp":
+            srcPath += "main.cpp";
+            break;
+        default:
+            console.log("ERROR: Language " + item.language + " not supported");
+            return;
+    }
+
+    fs.writeFile(srcPath, item.code, function(err) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+    });
+
+  })
+  .then( gradeSubmission(submission._id) )
+  .then(verdict => {
+    res.send(verdictDict[verdict]);
+  })
+  .catch(err => {
+    console.error(err);
+  });
+});
+
+// Add Problem API
+
+app.post("/problem/add/", async function(req,res){
+  userData = req.body;
+  queryName = req.params.USERNAME;
+  const prob = new Problem({
+    name:userData.name,
+    description: userData.desc,// Description
+  // A list of two examples
+    example1: userData.example1,
+    example2: userData.example2,
+    constraints: userData.constraints
+  });
+  prob.save();
+  console.log("Saved");
+  res.send("OK");
+});
+
+
+/**
+ * function gradeSubmission: Grade the submission
+ * 
+ * Save the source code to ~/submissions/{submissionId}/. Expected source code file names:
+ * Python:  main.py
+ * Java:    Main.java
+ * C:       main.c
+ * C++:     main.cpp
+ * 
+ * @param {*} submissionId: String.
+ * 
+ * @returns: A number representing the grader verdict, where:
+ * 0 = Accepted
+ * 1 = Compile Error or Compile Time Exceeded (default limit: 30 seconds)
+ * 2 = ???
+ * 3 = ???
+ * 4 = TBD
+ */
+async function gradeSubmission(submissionId) {
+    
+    await Submission.findById(submissionId, function(err, submission) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+
+        var submissionArg = "-s " + submission._id + " ";
+        var languageArg = "-l " + submission.language + " ";
+        var testcaseArg = "-T " + submission.testcase + " ";
+
+        exec("./bin/grader " + submissionArg + languageArg + testcaseArg, (err, stdout, stderr) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            return stdout;
+        }
+    )})
+    .then(verdict => {
+        return Number(verdict)
+    })
+    .catch(err => {
+        console.error(err);
+    });  
+
+}
