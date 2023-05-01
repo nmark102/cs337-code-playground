@@ -197,6 +197,10 @@ function getProblem(p) {
 
 }
 
+function goHome() {
+  window.location.href = '/index.html';
+}
+
 /*** ------ Start problem.html functions ------------------*/
 function submitAndExecute(){
   let code = codespace.getValue(); // Gets string from monaco editor
