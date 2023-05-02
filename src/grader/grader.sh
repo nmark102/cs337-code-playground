@@ -1,8 +1,9 @@
 #!/bin/bash
 
 # Default settings
-SUBMISSIONS_BASE_DIR="~/submissions/"
-TESTCASES_BASE_DIR="~/testcases/"
+SUBMISSIONS_BASE_DIR="/root/submissions/"
+TESTCASES_BASE_DIR="/root/testcases/"
+
 DEFAULT_GCC_ARGS="-O2 -fno-omit-frame-pointer -fsanitize=address"
 DEFAULT_GPP_ARGS="-O2 -fno-omit-frame-pointer -fsanitize=address"
 
@@ -80,11 +81,11 @@ do
 done
 
 # Set up default values
-if [ ${TIME_LIMIT}=="" ]; then
+if [ "${TIME_LIMIT}" == "" ]; then
     TIME_LIMIT="1s"
 fi
 
-if [ ${MEM_LIMIT}=="" ]; then
+if [ "${MEM_LIMIT}" == "" ]; then
     MEM_LIMIT="64m"
 fi
 
@@ -108,24 +109,22 @@ elif [ -z ${PROBLEM_ID} ]; then
 fi
 
 SUBMISSION_DIR="${SUBMISSIONS_BASE_DIR}${SUBMISSION_ID}/"
-
+# CLEANUP_SUBMISSIONS="ls ${SUBMISSION_DIR}* | grep -v -E '*.c|*.cpp|*.java|*.py|*.js' | xargs rm"
+CLEANUP_SUBMISSIONS=
 COMPILE_CMD=
 
 # Compile
 case ${LANGUAGE} in
     c)
-        COMPILE_CMD="gcc ${DEFAULT_GCC_ARGS} -o ${SUBMISSION_DIR}a.out ${SUBMISSION_DIR}main.c 1>${SUBMISSION_DIR}compile.log 2>&1"
+        COMPILE_CMD="gcc ${DEFAULT_GCC_ARGS} -o ${SUBMISSION_DIR}a.out ${SUBMISSION_DIR}main.c"
         ;;
     cpp)
-        COMPILE_CMD="g++ ${DEFAULT_GPP_ARGS} -o ${SUBMISSION_DIR}a.out ${SUBMISSION_DIR}main.cpp 1>${SUBMISSION_DIR}compile.log 2>&1"
+        COMPILE_CMD="g++ ${DEFAULT_GPP_ARGS} -o ${SUBMISSION_DIR}a.out ${SUBMISSION_DIR}main.cpp"
         ;;
     java)
-        COMPILE_CMD="javac ${SUBMISSION_DIR}Main.java 1>${SUBMISSION_DIR}compile.log 2>&1"
+        COMPILE_CMD="javac ${SUBMISSION_DIR}Main.java"
         ;;
-    python)
-        # Nothing to compile
-        ;;
-    javascript)
+    python | javascript)
         # Nothing to compile
         ;;
     *)
@@ -134,14 +133,18 @@ case ${LANGUAGE} in
         ;;
 esac
 
-if [ $(COMPILE_CMD) -ne ((0)) ]; then
+COMPILE_RESULT=$(${COMPILE_CMD})
+
+if [ "${COMPILE_RESULT}" != "" ]; then
+    echo "${COMPILE_RESULT}" > ${SUBMISSION_DIR}compile.log
+
     echo "Compiler error. See ${SUBMISSION_DIR}compile.log for details.}"
-    ls ${SUBMISSION_DIR}* | grep -v -E '.c\|.cpp.\|.java\|.py\|.js' | xargs rm
+    ${CLEANUP_SUBMISSIONS}
     exit ${COMPILER_ERROR}
 fi
 
 # Run
-for TESTCASE_PATH in $(ls ~/testcases/${PROBLEM_ID}*/*.stdin)
+for TESTCASE_PATH in $(ls ${TESTCASES_BASE_DIR}${PROBLEM_ID}*/*.stdin)
 do
     EXEC_CMD=
     case ${LANGUAGE} in
@@ -149,7 +152,7 @@ do
         # Run the program
         EXEC_CMD="timeout ${TIME_LIMIT} \
             ${SUBMISSION_DIR}a.out < ${TESTCASE_PATH} \
-            > ${SUBMISSION_DIR}output.txt 2>${SUBMISSION_DIR}stderr_output.txt"
+            1>${SUBMISSION_DIR}output.txt 2>${SUBMISSION_DIR}stderr_output.txt"
         ;;
     java)
 
@@ -160,22 +163,27 @@ do
     javascript)
 
         ;;
-    esac
+    *)
         echo "You should never hit this point. Language ${LANGUAGE} not supported in the execution step."
+        exit ${GRADER_CRASHED}
+        ;;
+    esac
 
-    if [ $(EXEC_CMD) -ne ((0)) ]; then
+    EXEC_RESULT=$(${EXEC_CMD})
+
+    if [ "$(cat ${SUBMISSION_DIR}stderr_output.txt)" != "" ]; then
         echo "Runtime error. See ${SUBMISSION_DIR}stderr_output.txt for details."
-        ls ${SUBMISSION_DIR}* | grep -v -E '.c\|.cpp.\|.java\|.py\|.js' | xargs rm
+        ${CLEANUP_SUBMISSIONS}
         exit ${RUNTIME_ERROR}
     fi
       
     # Compare output
-    if [ $(diff -wB ${SUBMISSION_DIR}output.txt ${TESTCASE_PATH%.stdin}.stdout) -ne ((0)) ]; then
+    if [ "$(diff -wB ${SUBMISSION_DIR}output.txt ${TESTCASE_PATH%.stdin}.stdout)" != "0" ]; then
         exit ${WRONG_ANSWER}
     fi
 done
 
 # Remove everything but the source code files
-ls ${SUBMISSION_DIR}* | grep -v -E '.c\|.cpp.\|.java\|.py\|.js' | xargs rm
+${CLEANUP_SUBMISSIONS}
 
 exit ${ACCEPTED}
