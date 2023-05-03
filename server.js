@@ -92,16 +92,6 @@ app.use(express.static('public_html'))
 app.use(express.json())
 //app.use(parser.text({type: '*/*'}));
 
-// app.use('*', (req, res, next) => {
-//   let c = req.cookies;
-//   if (c && c.login) {
-//     if (cm.sessions.doesUserHaveSession(c.login.username, c.login.sid)) {
-//       cm.sessions.addOrUpdateSession(c.login.username);
-//     }
-//   }
-//   console.log("Whaaatttt");
-//   res.redirect("/userHome.html");
-// });
 
 // Problem List API
 app.get("/problems/download/", async function(req,res){
