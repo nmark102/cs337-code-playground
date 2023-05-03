@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string>
 #include <cstring>
+#include <unistd.h>
 
 using namespace std;
 
@@ -16,6 +17,7 @@ class Grader {
     public:
     // Public methods
         Grader(int argc, char* args[]);
+        void printConfigs();
         int compile();
         int execute();
         ~Grader();
