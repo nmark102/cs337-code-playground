@@ -36,8 +36,6 @@ function login() {
   })
 }
 
-
-
 /*** ------ End index.html functions  ------------*/
 
 
@@ -115,10 +113,11 @@ function downloadProblems() {
   .then(data => {
     html = "";
     for(let i=0; i<data.names.length;i++) {
-      console.log(data.names[i])
+      console.log(data.names[i]);
       let name = data.names[i];
-      html += '<div><button value="' + name + 
-        '" onclick="switchWindow(this.value)">' + name + "</button></div>\n";
+      html += '<div class="prompt"><button class="button" value="' + name + 
+        '" onclick="switchWindow(this.value)">' + name + '</button>'+
+        '<p>\tDifficulty</p><p>\tSeen</p></div>\n';
     }
     document.getElementById('choices').innerHTML = html;
   })
@@ -197,16 +196,36 @@ function getProblem(p) {
 
 }
 
-function goHome() {
-  window.location.href = '/index.html';
+function closeConsole() {
+  alert('testing');
+  document.getElementById('infoSmall').id = 'info';
+  document.getElementById('results').id = 'empty';
+  document.getElementById('empty').innerHTML = '';
+
+  console.log("HI")
 }
 
+function logout() {
+  alert("logging out");
+/*  fetch('user/logout')
+  .then(() => {
+    console.log("logged out");
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+*/
+}
 /*** ------ Start problem.html functions ------------------*/
 function submitAndExecute(){
   let code = codespace.getValue(); // Gets string from monaco editor
-  alert(code);
-
-/*  url = "/problem/execute/"
+  document.getElementById('info').id = 'infoSmall';
+  document.getElementById('empty').id = 'results';
+  let html = `<button id="close" class="button" onclick="closeConsole()">X</button>` + 
+    `<p>Hi</p>`;
+  document.getElementById('results').innerHTML = html;
+   
+  /*  url = "/problem/execute/"
   data = {codeData: code, language: "python3", testcase: ""};
   fetch(url, {
     method: 'POST',                                                             

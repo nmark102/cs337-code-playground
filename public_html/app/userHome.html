@@ -11,20 +11,18 @@ from.
 <head>                                                                          
   <meta charset="UTF-8">                                                        
   <title>Problems list</title>                                                         
-  <link id="cssFile" rel="stylesheet" type="text/css" href="./style/library.css">    
+  <link id="cssFile" rel="stylesheet" type="text/css" href="./style/userHome.css">    
+  <link id="cssFile" rel="stylesheet" type="text/css" href="./style/general.css">    
   <script src="./code.js"></script>
 </head>                                                                         
   <body>
-    <div id="header" class="box">
-      <h1>Solve problems, get points, place on leaderboard<h1>
-      <select id="problem_menu" value="Menu" onchange="location = this.value">
-        <option value="">Menu</option>                                             
-        <option value="./index.html">Logout</option>                               
-      </select>               
+    <div id="title" class="box">
+      <h1 class="logo">Codespace</h1>
+    <button class="button" id="logout" onclick="logout()">Logout</button> 
     </div>
     <div id="stats" class="box"><h1>User Stats</h1></div>
     <div id="problems" class="box"><h1>Problem list</h1>
-      <div id="choices" class="box"><a href="./problem.html">Choices</a></div>
+      <div id="choices" class="box"><a href="./problem.html"></a></div>
     </div>
   </body>                                                                         
 </html>                

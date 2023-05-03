@@ -12,17 +12,18 @@ history.
   <meta charset="UTF-8">                                                        
   <title>Problems</title>                                   
   <link id="cssFile" rel="stylesheet" type="text/css" href="./style/problem.css">    
+  <link id="cssFile" rel="stylesheet" type="text/css" href="./style/general.css">    
   <script src="./code.js"></script>
   <script src="https://unpkg.com/monaco-editor@latest/min/vs/loader.js"></script>
 </head>                                                                         
-  <body>
+  <body id="body">
     <div id="header" class="box">
-      <h1 id="logo" class="label">Code Playground</h1>
+      <h1 class="logo" class="label">Code Playground</h1>
       <button class="button" onclick="location = './userHome.html'">Home</button>
       <button class="button" id="logout" onclick="goHome()'">Logout</button>
     </div>
-    <div id="info" class="box"></div>
-    <div id="console"></div>
+    <div id="info" class="box"></div> <!-- Will Display problem -->
+    <div id="empty" class="box"></div> <!-- Will Display results -->
     <div id="pref" class="box">
       <div id="lang" class="minibox">
         <h3 class="label">Syntax: </h3>

@@ -21,11 +21,16 @@ body {
   overflow-y: scroll;        
 }
 
-#header {
+.prompt p, .prompt button {
+  display: inline;
+}
+
+#title {
   top: 0px;                                                                     
   left: 0px;                                                                    
   width: 100vw;                                                                 
   height: 20vh;
+  text-align: right; 
 }
 
 #stats {
