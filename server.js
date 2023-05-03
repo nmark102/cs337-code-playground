@@ -208,7 +208,8 @@ app.post("/problem/execute/", async function(req, res) { // Program execution AP
     language: userData.language,
     testcase: userData.testcase,
     code: userData.code
-  }).save()
+  });
+  await submission.save()
   .then(item => {
     // Write the source code
     var srcPath = "/root/submissions/" + item._id + "/";
