@@ -280,9 +280,10 @@ app.post("/problem/add/", async function(req,res){
  * @returns: A number representing the grader verdict, where:
  * 0 = Accepted
  * 1 = Compile Error or Compile Time Exceeded (default limit: 30 seconds)
- * 2 = ???
- * 3 = ???
- * 4 = TBD
+ * 2 = Runtime Error
+ * 3 = Wrong Answer
+ * 4 = Time limit exceeded
+ * 5 = Memory limit exceeded
  */
 async function gradeSubmission(submissionId) {
     
