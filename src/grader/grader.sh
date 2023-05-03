@@ -16,6 +16,10 @@ WRONG_ANSWER=3
 TIME_LIMIT_EXCEEDED=4
 MEMORY_LIMIT_EXCEEDED=5
 
+# Miscellaneous constants
+TIMEOUT_EXIT_CODE=124
+MEMORY_LIMIT_EXIT_CODE=137
+
 # Set up parameters
 SUBMISSION_ID=
 LANGUAGE=
@@ -173,8 +177,16 @@ do
     esac
      
     ${EXEC_CMD} < ${TESTCASE_PATH} 1>${SUBMISSION_DIR}output.txt 2>${SUBMISSION_DIR}stderr_output.txt
-  
-    if [ "$?" != "0" ]; then
+
+    if [ "$?" == "${TIMEOUT_EXIT_CODE}" ]; then
+        # ${CLEANUP_SUBMISSIONS}
+        exit ${TIME_LIMIT_EXCEEDED}
+    #elif [ "$?" == "${MEMORY_LIMIT_EXIT_CODE}" ]; then
+    #    echo "Memory limit exceeded. See ${SUBMISSION_DIR}stderr_output.txt for details."
+    #    # ${CLEANUP_SUBMISSIONS}
+    #    exit ${MEMORY_LIMIT_EXCEEDED}
+    
+    elif [ "$?" != "0" ]; then
         echo "Runtime error. See ${SUBMISSION_DIR}stderr_output.txt for details."
         # ${CLEANUP_SUBMISSIONS}
         exit ${RUNTIME_ERROR}
