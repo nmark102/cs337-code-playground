@@ -189,17 +189,18 @@ app.listen(port, () => {
 
 
 
-// TODO: Mark all yours from here on out 
-
+/**
+ *  This route is for receiving and grading user's code submissions.
+ * 
+ * Read the source code, language, and chosen problemset from the request body.
+ * Log a new submission in the database. 
+ * Write the user's source code to /root/submissions/{submission_id}/
+ * Call the grader and return a verdict.
+ * 
+ */
 app.post("/problem/execute/", async function(req, res) { // Program execution API
   userData = req.body;
   code = userData.code;
-  verdictDict = {0: "Accepted",
-    1: "Compile error",
-    2:" Runtime error",
-    3: "Wrong answer",
-    4: "Time limit exceeded",
-    5: "Memory limit exceeded"}
   
   // TODO: use the code to run the code and store the status in the variable
   var submission = new Submission({
@@ -210,7 +211,7 @@ app.post("/problem/execute/", async function(req, res) { // Program execution AP
   }).save()
   .then(item => {
     // Write the source code
-    var srcPath = "./submissions/" + item._id + "/";
+    var srcPath = "/root/submissions/" + item._id + "/";
 
     switch (item.language) {
         case "python3":
@@ -225,6 +226,8 @@ app.post("/problem/execute/", async function(req, res) { // Program execution AP
         case "cpp":
             srcPath += "main.cpp";
             break;
+        case "javascript":
+            srcPath += "main.js";
         default:
             console.log("ERROR: Language " + item.language + " not supported");
             return;
@@ -240,7 +243,29 @@ app.post("/problem/execute/", async function(req, res) { // Program execution AP
   })
   .then( gradeSubmission(submission._id) )
   .then(verdict => {
-    res.send(verdictDict[verdict]);
+    switch (verdict) {
+        case 0:
+            res.send("Accepted");
+            break;
+        case 1:
+            // Return compiler error message
+            break;
+        case 2:
+            // Return runtime error message
+            break;
+        case 3:
+            // Return diff output
+            break;
+        case 4:
+            res.send("Time limit exceeded");
+            break;
+        case 5:
+            res.send("Memory limit exceeded");
+            break;
+        default:
+            console.log("ERROR: Verdict " + verdict + " not supported or may have been misconfigured.");
+            break;
+    };
   })
   .catch(err => {
     console.error(err);
@@ -265,15 +290,18 @@ app.post("/problem/add/", async function(req,res){
   res.send("OK");
 });
 
+const GRADER_PATH = "/root/src/grader/grader.sh ";
 
 /**
- * function gradeSubmission: Grade the submission
+ * function gradeSubmission: 
  * 
- * Save the source code to ~/submissions/{submissionId}/. Expected source code file names:
- * Python:  main.py
- * Java:    Main.java
- * C:       main.c
- * C++:     main.cpp
+ * 
+ * Save the source code to /root/submissions/{submissionId}/. Expected source code file names:
+ * Python:      main.py
+ * Java:        Main.java
+ * C:           main.c
+ * C++:         main.cpp
+ * Javascript:  main.js
  * 
  * @param {*} submissionId: String.
  * 
@@ -297,7 +325,7 @@ async function gradeSubmission(submissionId) {
         var languageArg = "-l " + submission.language + " ";
         var testcaseArg = "-T " + submission.testcase + " ";
 
-        exec("./bin/grader " + submissionArg + languageArg + testcaseArg, (err, stdout, stderr) => {
+        exec(GRADER_PATH + submissionArg + languageArg + testcaseArg, (err, stdout, stderr) => {
             if (err) {
                 console.error(err);
                 return;
