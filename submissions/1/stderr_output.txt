@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/root/submissions/1/main.py", line 4, in <module>
+    b = int(userInput[1])
+IndexError: list index out of range

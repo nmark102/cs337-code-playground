@@ -1,0 +1,6 @@
+./submissions/2/Main.java:3: error: cannot find symbol
+        NONEXISTENT_FUNCTION();
+        ^
+  symbol:   method NONEXISTENT_FUNCTION()
+  location: class Main
+1 error
