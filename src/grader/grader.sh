@@ -90,11 +90,11 @@ if [ "${MEM_LIMIT}" == "" ]; then
 fi
 
 # Making sure the grader is properly configured
-echo "Problem:      ${PROBLEM_ID}"
-echo "Submission:   ${SUBMISSION_ID}"
-echo "Language:     ${LANGUAGE}"
-echo "Time limit:   ${TIME_LIMIT}"
-echo "Memory limit: ${MEM_LIMIT}"
+# echo "Problem:      ${PROBLEM_ID}"
+# echo "Submission:   ${SUBMISSION_ID}"
+# echo "Language:     ${LANGUAGE}"
+# echo "Time limit:   ${TIME_LIMIT}"
+# echo "Memory limit: ${MEM_LIMIT}"
 
 # Make sure that submission, language, and problem are specified
 if   [ -z ${SUBMISSION_ID} ]; then
@@ -124,66 +124,80 @@ case ${LANGUAGE} in
     java)
         COMPILE_CMD="javac ${SUBMISSION_DIR}Main.java"
         ;;
-    python | javascript)
+    python3 | javascript)
         # Nothing to compile
         ;;
     *)
-        echo "Language ${LANGUAGE} not supported"
+        echo "Language ${LANGUAGE} not supported" 1>&2
         exit ${GRADER_CRASHED}
         ;;
 esac
 
-COMPILE_RESULT=$(${COMPILE_CMD})
+COMPILE_RESULT=$(${COMPILE_CMD} 2>&1)
 
-if [ "${COMPILE_RESULT}" != "" ]; then
-    echo "${COMPILE_RESULT}" > ${SUBMISSION_DIR}compile.log
-
-    echo "Compiler error. See ${SUBMISSION_DIR}compile.log for details.}"
+# If compiling fails
+if [ "$?" != "0" ]; then
+    # Cleanup executable files before writing compiler error
     ${CLEANUP_SUBMISSIONS}
+
+    # Write compiler error
+    echo "${COMPILE_RESULT}" > ${SUBMISSION_DIR}compile.log
+    echo "Compiler error. See ${SUBMISSION_DIR}compile.log for details." 1>&2
+    
     exit ${COMPILER_ERROR}
 fi
 
 # Run
 for TESTCASE_PATH in $(ls ${TESTCASES_BASE_DIR}${PROBLEM_ID}*/*.stdin)
 do
-    EXEC_CMD=
+    EXEC_CMD="timeout ${TIME_LIMIT}"
+    # EXEC_CMD=
     case ${LANGUAGE} in
     c | cpp)
         # Run the program
-        EXEC_CMD="timeout ${TIME_LIMIT} \
-            ${SUBMISSION_DIR}a.out < ${TESTCASE_PATH} \
-            1>${SUBMISSION_DIR}output.txt 2>${SUBMISSION_DIR}stderr_output.txt"
+        EXEC_CMD="${EXEC_CMD} ${SUBMISSION_DIR}a.out"
         ;;
     java)
-
+        EXEC_CMD="${EXEC_CMD} java ${SUBMISSION_DIR}Main.java"
         ;;
     python3)
-
+        EXEC_CMD="${EXEC_CMD} python3 ${SUBMISSION_DIR}main.py"
         ;;
     javascript)
-
+        EXEC_CMD="${EXEC_CMD} node ${SUBMISSION_DIR}main.js"
         ;;
     *)
         echo "You should never hit this point. Language ${LANGUAGE} not supported in the execution step."
         exit ${GRADER_CRASHED}
         ;;
     esac
-
-    EXEC_RESULT=$(${EXEC_CMD})
-
-    if [ "$(cat ${SUBMISSION_DIR}stderr_output.txt)" != "" ]; then
+     
+    ${EXEC_CMD} < ${TESTCASE_PATH} 1>${SUBMISSION_DIR}output.txt 2>${SUBMISSION_DIR}stderr_output.txt
+  
+    if [ "$?" != "0" ]; then
         echo "Runtime error. See ${SUBMISSION_DIR}stderr_output.txt for details."
-        ${CLEANUP_SUBMISSIONS}
+        # ${CLEANUP_SUBMISSIONS}
         exit ${RUNTIME_ERROR}
     fi
-      
+    
+    DIFF_CMD="diff -wBy ${SUBMISSION_DIR}output.txt ${TESTCASE_PATH%.stdin}.expected_output" 
+    DIFF_RES=$(${DIFF_CMD})
+    
     # Compare output
-    if [ "$(diff -wB ${SUBMISSION_DIR}output.txt ${TESTCASE_PATH%.stdin}.stdout)" != "0" ]; then
+    if [ "$?" != "0" ]; then
+        # If diff reports that the outputs are different, 
+        # dump diff output to a file
+        
+        echo "Testcase ${TESTCASE_PATH%.stdin} failed. Expected output on the left column, your actual output on the right." > ${SUBMISSION_DIR}diff_output.txt
+        echo "${DIFF_RES}" >> ${SUBMISSION_DIR}diff_output.txt
+        
+
         exit ${WRONG_ANSWER}
     fi
+    echo
 done
 
 # Remove everything but the source code files
-${CLEANUP_SUBMISSIONS}
+# ${CLEANUP_SUBMISSIONS}
 
 exit ${ACCEPTED}
