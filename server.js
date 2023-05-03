@@ -243,27 +243,35 @@ app.post("/problem/execute/", async function(req, res) { // Program execution AP
   })
   .then( gradeSubmission(submission._id) )
   .then(verdict => {
+    var verdict = "";
     switch (verdict) {
         case 0:
-            res.send("Accepted");
+            verdict = "Accepted!";
             break;
         case 1:
-            // Return compiler error message
+            verdict = "Compilation error.\n";
+
+            // Add compiler error log
+            verdict += fs.readFileSync("/root/submissions/" + submission._id + "/compile.log").toString("utf-8");
             break;
         case 2:
             // Return runtime error message
+            verdict = "Runtime error.\n";
+            verdict += fs.readFileSync("/root/submissions/" + submission._id + "/stderr_output.txt").toString("utf-8");            
             break;
         case 3:
             // Return diff output
+            verdict = "Wrong answer. Expected output is shown on the left column, your actual output on the right.\n";
+            verdict += fs.readFileSync("/root/submissions/" + submission_id + "/diff_output.txt").toString("utf-8");
             break;
         case 4:
-            res.send("Time limit exceeded");
+            verdict = "Time limit exceeded.";
             break;
         case 5:
-            res.send("Memory limit exceeded");
+            verdict = "Memory limit exceeded";
             break;
         default:
-            console.log("ERROR: Verdict " + verdict + " not supported or may have been misconfigured.");
+            console.error("ERROR: Verdict " + verdict + " not supported or may have been misconfigured.");
             break;
     };
   })

@@ -2,7 +2,7 @@
 class CustomSessions {
 
   sessions = {};
-  SESSION_LENGTH = 6000 * 5;
+  SESSION_LENGTH = 60000 * 10;
 
   constructor() { }
 
