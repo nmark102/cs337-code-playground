@@ -1,10 +1,10 @@
 // Imports
-const child_process = require("child_process");
 const mongoose = require('mongoose');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const fs = require('fs');
 const crypto = require('crypto');
+const child_process = require('child_process');
 const cm = require('./customsessions');
 const Schema = mongoose.Schema
 const port = 3000;
@@ -200,8 +200,8 @@ app.listen(port, () => {
  * 
  */
 app.post("/problem/execute/", async function(req, res) { // Program execution API
-    userData = req.body;
-    code = userData.code;
+    var userData = req.body;
+    var code = userData.code;
     
     // TODO: use the code to run the code and store the status in the variable
     var submission = new Submission({
@@ -211,13 +211,11 @@ app.post("/problem/execute/", async function(req, res) { // Program execution AP
         code: userData.code
     });
     await submission.save();
-    
-    // Write the source code
-    var srcPath = "/root/submissions/" + item._id + "/";
-    fs.makeDirSync(srcPath);
 
-    switch (item.language) {
-        case "python" | "python3":
+    var srcPath = "/root/submissions/" + submission._id + "/";
+    fs.mkdirSync(srcPath);
+    switch (submission.language) {
+        case "python3":
             srcPath += "main.py";
             break;
         case "java":
@@ -232,21 +230,23 @@ app.post("/problem/execute/", async function(req, res) { // Program execution AP
         case "javascript":
             srcPath += "main.js";
         default:
-            console.log("ERROR: Language " + item.language + " not supported");
+            console.error("ERROR: Language " + item.language + " S");
             return;
     }
 
-    fs.writeFile(srcPath, submission.code, function(err) {
+    fs.writeFile(srcPath, code, function(err) {
         if (err) {
-            console.log(err);
+            console.error(err);
             return;
         }
+        
     });
-
-    var verdict = await gradeSubmission(submission._id);
+    console.log(submission._id);
+    var verdict = gradeSubmission(submission._id);
+    // console.log("Verdict: " + verdict);
     res.send(verdict);
+  
 });
-
 
 // Add Problem API
 
@@ -290,24 +290,30 @@ const GRADER_PATH = "/root/src/grader/grader.sh ";
  * 5 = Memory limit exceeded
  */
 async function gradeSubmission(submissionId) {
-    
-    try {
-        var submission = await Submission.findById(submissionId);
 
+    try {        
+        var submission = await Submission.findById(submissionId).exec();
+        console.log(submission);
+        
         var submissionArg = "-s " + submission._id + " ";
         var languageArg = "-l " + submission.language + " ";
         var testcaseArg = "-T " + submission.testcase + " ";
         
-        child_process.exec(GRADER_PATH + submissionArg + languageArg + testcaseArg, (err, stdout, stderr) => {
-            if (err) {
-                return err;
+        var result = child_process.exec(GRADER_PATH + submissionArg + languageArg + testcaseArg, (error, stdout, stderr) => {
+            if (error) {
+                console.error("Child process error: " + error);
+                return stderr;
             }
-            return "Accepted!";
+            else {
+                return "Accepted!";
+            }
         }
         );
+        console.log("Verdict from gradeSubmission(): " + result);
+        return result;
     }
     catch (err) {
         console.error(err);
-        return -1;
+        return "Grader crashed in gradeSubmission()";
     }
 }
