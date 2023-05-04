@@ -218,7 +218,24 @@ function logout() {
   });
 */
 }
+
 /*** ------ Start problem.html functions ------------------*/
+
+/* Assign testcase name according to problem selected */
+function getTestCase() {
+  let p = localStorage.getItem('problem');
+  if(p == "Two Sum") {
+    return '2-two-sum'; 
+  }
+  if(p == 'Add Two Numbers') {
+    return '1-add-two-numbers';
+  }
+  if(p == 'Find Median') {
+    return '3-find-median';
+  }
+  return 'none';
+}
+
 function submitAndExecute(){
   let check = document.getElementById('results');
   if(check !== null) {
@@ -233,7 +250,12 @@ function submitAndExecute(){
   document.getElementById('parent').innerHTML += html;
   let currLang = document.getElementById('currLang'); 
   url = "/problem/execute/"
-  data = {code: code, language: currLang.value, testcase: ""};
+  let testCase = getTestCase();
+  if(testCase == 'none') {
+    alert('Administrators have not added test cases yet, Sorry =(');
+    return; 
+  }
+  data = {code: code, language: currLang.value, testcase: testCase};
   fetch(url, {
     method: 'POST',                                                             
     body: JSON.stringify(data),                                                 
@@ -243,11 +265,12 @@ function submitAndExecute(){
     return response.text;
   })  
   .then((text) => {                                                             
-    window.alert(text);
+    alert(text);
   })                                                                           
   .catch(() => {                                                               
     alert('something went wrong');                                              
-  });  
+  }); 
+  alert('completed function');
 }
 /*** ------ End problem.html functions -------------*/
 
@@ -261,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.addEventListener('DOMContentLoaded', function() {
    if (window.location.href.endsWith('problem.html')) { 
-     let p = localStorage.getItem('problem')
+     let p = localStorage.getItem('problem');
      getProblem(p);
    }
 });
