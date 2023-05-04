@@ -251,7 +251,7 @@ app.post("/problem/execute/", async function(req, res) { // Program execution AP
         if (error) {
             console.error("Child process error: " + error);
             console.error(stderr.toString("utf-8"));
-            res.send(stderr);
+            res.send(stderr.toString("utf-8"));
         }
         else {
             console.log("Accepted!");
