@@ -229,7 +229,7 @@ function submitAndExecute(){
   document.getElementById('info').id = 'infoSmall';
   let html = `<div id="results" class="box"><button id="close" class="button"`+
               `onclick="closeConsole()">X</button>` + 
-              `<p>Hi</p></div>`;
+              `<p>Results Test</p></div>`;
   document.getElementById('parent').innerHTML += html;
   let currLang = document.getElementById('currLang'); 
   url = "/problem/execute/"

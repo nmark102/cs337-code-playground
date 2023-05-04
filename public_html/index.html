@@ -11,13 +11,13 @@ login or create a new account-->
   <meta charset="UTF-8">                                                        
   <title>Welcome to Code Playground</title>                                                 
   <link id="cssFile" rel="stylesheet" type="text/css" href="./style/index.css">              
+  <link id="cssFile" rel="stylesheet" type="text/css" href="./style/general.css">              
   <script src="./login.js"></script>
 </head>                                                                         
   <body id="dark">
     <div id="header" class="box">
-    <h1>Welcome to Code Playground</h1>
+    <h1 class="logo">Welcome to Code Playground</h1>
     </div>
-    <div id="content" class="box"><div>
     <div id="login" class="box">
       <h1><b>Login</b></h1>                                                     
       <label for="username">Username</label>                                    
@@ -26,7 +26,30 @@ login or create a new account-->
       <input type="password" id="password" name="password"><br><br>             
       <input type='submit' value="Login" onclick="login()">                
       <div id="error"></div><br><br>     
-      <input type='submit' value="Create Account" onclick="newUser()">                
+      <h1><b>New User</b></h1>
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username"><br><br>
+      <label for="primaryEmail">Primary email:</label>
+      <input type="email" name="primaryEmail"
+                 pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{3}"
+                 id="primaryEmail" required><br><br>
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" pattern=".{8,}" required><br><br>
+      <input type='submit' value="Create" onclick="createAccount()">
+    </div>
+    <div id="info" class="box">
+      <h2>Practice your coding skill for class, interviews or fun!</h2>
+      <p>We offer a few common problems, but we welcome other ideas.</p>
+      <p>This is a crowdsource platform! So feel free to add a problem you
+      think will challenge others.</p><br><br>
+      <h2>Some helpful tips!</h2>
+      <p>1. Create an account</p>
+      <p>2. Once you are logged in, you will be in the home page were you have
+      two options.</p>
+      <p>  - Choose a problem to attempt</p>
+      <p>           --- or ---         </p>
+      <p>  - Click the Add problem button and add your own. It will be
+      avialable to the Codespace community.</p>
     </div>
   </body>                                                                         
 </html>                
