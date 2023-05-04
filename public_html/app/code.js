@@ -255,7 +255,7 @@ function submitAndExecute(){
     return; 
   }
   data = {code: code, language: currLang.value, testcase: testCase};
-  fetch(url, {
+/*  fetch(url, {
     method: 'POST',                                                             
     body: JSON.stringify(data),                                                 
     headers: {"Content-Type": "application/json"}  
@@ -269,7 +269,7 @@ function submitAndExecute(){
   .catch(() => {                                                               
     alert('something went wrong');                                              
   }); 
-  alert('completed function');
+  alert('completed function');*/
 }
 /*** ------ End problem.html functions -------------*/
 
