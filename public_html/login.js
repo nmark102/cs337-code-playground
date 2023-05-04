@@ -28,12 +28,16 @@ function login() {
  */                                                                                
 
 function createAccount() {
-    let u = document.getElementById('username').value;
-    let p = document.getElementById('password').value;
+    let u = document.getElementById('u').value;
+    let p = document.getElementById('p').value;
     let e = document.getElementById('primaryEmail').value;
-    console.log(u);
-    console.log(p);
-    console.log(e);
+    if(u == "" || p == "") {
+      alert('username or password cannot be blank');
+      console.log(u);
+      console.log(p);
+      console.log(e);
+      return;
+    }
     let url = '/account/create/' + u + '/' + encodeURIComponent(p) + '/' + e;
     fetch(url)
     .then((response) => {
