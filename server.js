@@ -251,16 +251,17 @@ app.post("/problem/execute/", async function(req, res) { // Program execution AP
         if (error) {
             console.error("Child process error: " + error);
             console.error(stderr.toString("utf-8"));
-            result = stderr;
+            res.send(stderr);
         }
         else {
-            result = "Accepted!";
+            console.log("Accepted!");
+            res.send("Accepted!");
         }
     }
     );
            
-    console.log(result);
-    res.send(result);
+    //console.log(result);
+    //res.send(result);
 
     // var verdict = gradeSubmission(submission._id);
     // console.log("Verdict: " + verdict);
