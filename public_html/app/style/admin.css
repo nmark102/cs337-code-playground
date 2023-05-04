@@ -6,19 +6,24 @@ Assignment: Final Project - LeetCode Clone
 Purpose: Add style to the problem.css page for website. 
 */
 
-* {
- box-sizing: border-box;
-}
 
-body {
-  margin: 0px;
+
+input {
+  background-color: grey;
+  color: white;
 }
 
 textarea {
+  background-color: grey;
+  color: white;
   display: inline-block;
   margin: 0px;
   width: 50vw;
   height: 20vh;
+}
+
+#parent {
+  background-color: black;
 }
 
 .box {
@@ -29,8 +34,8 @@ textarea {
 }
 
 #Name {
-  font-size; 40px;
-  height: 5vh;
+  margin-top: 10px;
+  font-size: 3vh;
 }
 
 #problem_box {
@@ -46,45 +51,5 @@ textarea {
   right: 0px;
 }
 
-.button {
-  background-color: #008B8B;
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-  z-index: 3;
-}
 
-#box1 {
-  top: 0px;                                                                     
-  left: 0px;                                                                    
-  width: 100vw;                                                                 
-  height: 25vh;
-  z-index: -1;
-}
-
-#box2 {
-  top: 25vh;
-  left:0px;
-  width: 100vw;
-  height: 25vh;
-}
-
-#box3 {
-  top: 50vh;
-  left: 0px;
-  width: 100vw;
-  height: 25vh;
-}
-
-#box4 {
-  top: 75vh;
-  left: 0px;
-  width: 100vw;
-  height: 25vh;
-}
 

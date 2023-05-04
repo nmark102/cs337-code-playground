@@ -11,11 +11,12 @@ Purpose: Used to enter problem data into MongoDB.
   <meta charset="UTF-8">                                                        
   <title>Admin</title>                                                      
   <link id="cssFile" rel="stylesheet" type="text/css" href="./style/admin.css">    
+  <link id="cssFile" rel="stylesheet" type="text/css" href="./style/general.css">    
   <script src="./code.js"></script>             
-  <link rel="stylesheet" href="https://cdn.digital.arizona.edu/lib/arizona-bootstrap/2.0.23/css/arizona-bootstrap.min.css" crossorigin="anonymous">
 </head>                                                                            
-  <body>
-      <label for="Name"><b>Problem Name:</b></label>
+  <body id="parent">
+    <div>
+      <h2 class="logo">Problem Name:</h2>
       <input type="text" id="Name">
       <h1>Description<h1>                                                     
       <textarea id="desc">Enter problem description</textarea>                   
@@ -26,6 +27,8 @@ Purpose: Used to enter problem data into MongoDB.
       <h1>Constraints<h1>                                                     
       <textarea id="constraints">Enter problem constraints</textarea>                   
       <button class="button" onclick="uploadProblem()">Add Problem</button>
+      <button class="button" onclick="window.location.href =
+        'userHome.html'">Return Home</button>
     </div>
   </body>                                                                         
 </html>                          
