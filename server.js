@@ -241,10 +241,30 @@ app.post("/problem/execute/", async function(req, res) { // Program execution AP
         }
         
     });
-    console.log(submission._id);
-    var verdict = gradeSubmission(submission._id);
+
+    var submissionArg = "-s " + submission._id + " ";
+    var languageArg = "-l " + submission.language + " ";
+    var testcaseArg = "-T " + submission.testcase + " ";
+
+    var result = "";
+    child_process.exec(GRADER_PATH + submissionArg + languageArg + testcaseArg, function (error, stdout, stderr) {
+        if (error) {
+            console.error("Child process error: " + error);
+            console.error(stderr.toString("utf-8"));
+            result = stderr;
+        }
+        else {
+            result = "Accepted!";
+        }
+    }
+    );
+           
+    console.log(result);
+    res.send(result);
+
+    // var verdict = gradeSubmission(submission._id);
     // console.log("Verdict: " + verdict);
-    res.send(verdict);
+    // res.send(verdict);
   
 });
 
