@@ -177,8 +177,9 @@ do
     esac
      
     ${EXEC_CMD} < ${TESTCASE_PATH} 1>${SUBMISSION_DIR}output.txt 2>${SUBMISSION_DIR}stderr_output.txt
+    EXEC_STATUS=$?
 
-    if [ "$?" == "${TIMEOUT_EXIT_CODE}" ]; then
+    if [ "${EXEC_STATUS}" == "${TIMEOUT_EXIT_CODE}" ]; then
         # ${CLEANUP_SUBMISSIONS}
         echo "Time limit exceeded." 1>&2
         exit ${TIME_LIMIT_EXCEEDED}
@@ -187,9 +188,9 @@ do
     #    # ${CLEANUP_SUBMISSIONS}
     #    exit ${MEMORY_LIMIT_EXCEEDED}
     
-    elif [ "$?" != "0" ]; then
+    elif [ "${EXEC_STATUS}" != "0" ]; then
         echo "Runtime error." 1>&2
-        cat ${SUBMISSION_DIR}_output.txt 1>&2
+        cat ${SUBMISSION_DIR}output.txt 1>&2
         cat ${SUBMISSION_DIR}stderr_output.txt 1>&2
 
         # ${CLEANUP_SUBMISSIONS}

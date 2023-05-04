@@ -291,7 +291,7 @@ const GRADER_PATH = "/root/src/grader/grader.sh ";
  */
 async function gradeSubmission(submissionId) {
 
-    try {        
+    try {
         var submission = await Submission.findById(submissionId).exec();
         console.log(submission);
         
@@ -299,21 +299,23 @@ async function gradeSubmission(submissionId) {
         var languageArg = "-l " + submission.language + " ";
         var testcaseArg = "-T " + submission.testcase + " ";
         
-        var result = child_process.exec(GRADER_PATH + submissionArg + languageArg + testcaseArg, (error, stdout, stderr) => {
+        
+        var result = child_process.exec(GRADER_PATH + submissionArg + languageArg + testcaseArg, function (error, stdout, stderr) {
             if (error) {
                 console.error("Child process error: " + error);
-                return stderr;
+                console.error(stderr.toString("utf-8"));
+                return stderr.toString("utf-8");
             }
             else {
                 return "Accepted!";
             }
         }
         );
-        console.log("Verdict from gradeSubmission(): " + result);
+               
         return result;
     }
     catch (err) {
         console.error(err);
-        return "Grader crashed in gradeSubmission()";
+        return err;
     }
 }
