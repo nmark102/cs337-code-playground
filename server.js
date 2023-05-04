@@ -244,7 +244,7 @@ app.post("/problem/execute/", async function(req, res) { // Program execution AP
   })
   .then( gradeSubmission(submission._id) )
   .then(verdict => {
-    /*
+/*
     var verdict = "";
     switch (verdict) {
         case 0:
@@ -276,7 +276,7 @@ app.post("/problem/execute/", async function(req, res) { // Program execution AP
             console.error("ERROR: Verdict " + verdict + " not supported or may have been misconfigured.");
             break;
     };
-    */
+*/
     return verdict;
   })
   .catch(err => {
@@ -326,7 +326,7 @@ const GRADER_PATH = "/root/src/grader/grader.sh ";
  * 5 = Memory limit exceeded
  */
 async function gradeSubmission(submissionId) {
-    /*
+/*
     await Submission.findById(submissionId, function(err, submission) {
         if (err) {
             console.log(err);
@@ -351,7 +351,7 @@ async function gradeSubmission(submissionId) {
     .catch(err => {
         console.error(err);
     });  
-    */
+*/
 
     try {
         await Submission.findById(submissionId);

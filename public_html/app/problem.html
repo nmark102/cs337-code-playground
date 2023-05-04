@@ -16,16 +16,16 @@ history.
   <script src="./code.js"></script>
   <script src="https://unpkg.com/monaco-editor@latest/min/vs/loader.js"></script>
 </head>                                                                         
-  <body id="body">
+  <body id="parent">
     <div id="header" class="box">
       <h1 class="logo" class="label">Code Playground</h1>
       <button class="button" onclick="location = './userHome.html'">Home</button>
       <button class="button" id="logout" onclick="goHome()'">Logout</button>
     </div>
     <div id="info" class="box"></div> <!-- Will Display problem -->
-    <div id="empty" class="box"></div> <!-- Will Display results -->
     <div id="pref" class="box">
       <div id="lang" class="minibox">
+        <input type="hidden" id="currLang" value="javascript">
         <h3 class="label">Syntax: </h3>
         <button class="button" onclick="selectLang('javascript')">Javascript</button>
         <button class="button" onclick="selectLang('python')">Python</button>

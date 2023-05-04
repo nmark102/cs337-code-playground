@@ -139,20 +139,26 @@ function switchWindow(identifier){
  * @param string, syntax language
  */
 function selectLang(string) {
+  let currLang = document.getElementById('currLang');
+  if(currLang.value == string) {
+    return;
+  }
   let v = "";
   let l = "";
   if(string == 'javascript') {
-    v = 'function hello() {\n\talert("Hello, Monaco!");\n}';
-    l = string;  
+    v = 'function hello() {\n\talert("Hello World!");\n}';
+    l = string; 
   }
   if(string == 'python') {
-    v = 'class Solution(object):\n\tdef main():';
+    v = 'class Solution(object):\n\tdef main():\n\t\tprint("Hello World!")';
     l = string;
+    currLang.value = 'python3';
   }
   if(string == 'c') {
     v = '#include <stdio>\n\n\nint main(argc, argv[])';
     l = string;
   }
+  currLang.value = string;
   monaco.editor.setModelLanguage(codespace.getModel(), string);
   codespace.getModel().setValue(v);
   
@@ -197,12 +203,8 @@ function getProblem(p) {
 }
 
 function closeConsole() {
-  alert('testing');
   document.getElementById('infoSmall').id = 'info';
-  document.getElementById('results').id = 'empty';
-  document.getElementById('empty').innerHTML = '';
-
-  console.log("HI")
+  document.getElementById('results').remove();
 }
 
 function logout() {
@@ -218,15 +220,20 @@ function logout() {
 }
 /*** ------ Start problem.html functions ------------------*/
 function submitAndExecute(){
+  let check = document.getElementById('results');
+  if(check !== null) {
+    console.log("test");
+    return;
+  }
   let code = codespace.getValue(); // Gets string from monaco editor
   document.getElementById('info').id = 'infoSmall';
-  document.getElementById('empty').id = 'results';
-  let html = `<button id="close" class="button" onclick="closeConsole()">X</button>` + 
-    `<p>Hi</p>`;
-  document.getElementById('results').innerHTML = html;
-   
-  /*  url = "/problem/execute/"
-  data = {codeData: code, language: "python3", testcase: ""};
+  let html = `<div id="results" class="box"><button id="close" class="button"`+
+              `onclick="closeConsole()">X</button>` + 
+              `<p>Hi</p></div>`;
+  document.getElementById('parent').innerHTML += html;
+  let currLang = document.getElementById('currLang'); 
+  url = "/problem/execute/"
+  data = {codeData: code, language: currLang.value, testcase: ""};
   fetch(url, {
     method: 'POST',                                                             
     body: JSON.stringify(data),                                                 
@@ -241,7 +248,6 @@ function submitAndExecute(){
   .catch(() => {                                                               
     alert('something went wrong');                                              
   });  
-*/
 }
 /*** ------ End problem.html functions -------------*/
 
