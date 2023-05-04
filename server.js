@@ -230,7 +230,7 @@ app.post("/problem/execute/", async function(req, res) { // Program execution AP
         case "javascript":
             srcPath += "main.js";
         default:
-            console.error("ERROR: Language " + item.language + " S");
+            console.error("ERROR: Language " + submission.language + " S");
             return;
     }
 
