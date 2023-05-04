@@ -116,8 +116,7 @@ function downloadProblems() {
       console.log(data.names[i]);
       let name = data.names[i];
       html += '<div class="prompt"><button class="button" value="' + name + 
-        '" onclick="switchWindow(this.value)">' + name + '</button>'+
-        '<p>\tDifficulty</p><p>\tSeen</p></div>\n';
+        '" onclick="switchWindow(this.value)">' + name + '</button>';
     }
     document.getElementById('choices').innerHTML = html;
   })
@@ -246,7 +245,7 @@ function submitAndExecute(){
   document.getElementById('info').id = 'infoSmall';
   let html = `<div id="results" class="box"><button id="close" class="button"`+
               `onclick="closeConsole()">X</button>` + 
-              `<p>Hi</p></div>`;
+              `<h3>Failed!</h3></div>`;
   document.getElementById('parent').innerHTML += html;
   let currLang = document.getElementById('currLang'); 
   url = "/problem/execute/"

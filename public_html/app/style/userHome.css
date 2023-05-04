@@ -29,22 +29,15 @@ body {
   top: 0px;                                                                     
   left: 0px;                                                                    
   width: 100vw;                                                                 
-  height: 20vh;
+  height: 15vh;
   text-align: right; 
-}
-
-#stats {
-  top: 20vh;
-  left: 0px;
-  width: 100vw;
-  height: 20vh;
 }
 
 #problems {
   bottom: 0px;
   left: 0px;
   width: 100vw;
-  height: 60vh;
+  height: 85vh;
 }
 
 #choices {
