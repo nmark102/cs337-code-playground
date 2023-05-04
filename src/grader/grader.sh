@@ -128,7 +128,7 @@ case ${LANGUAGE} in
     java)
         COMPILE_CMD="javac ${SUBMISSION_DIR}Main.java"
         ;;
-    python3 | javascript)
+    python | python3 | javascript)
         # Nothing to compile
         ;;
     *)
@@ -164,7 +164,7 @@ do
     java)
         EXEC_CMD="${EXEC_CMD} java ${SUBMISSION_DIR}Main.java"
         ;;
-    python3)
+    python | python3)
         EXEC_CMD="${EXEC_CMD} python3 ${SUBMISSION_DIR}main.py"
         ;;
     javascript)

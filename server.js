@@ -200,23 +200,24 @@ app.listen(port, () => {
  * 
  */
 app.post("/problem/execute/", async function(req, res) { // Program execution API
-  userData = req.body;
-  code = userData.code;
-  
-  // TODO: use the code to run the code and store the status in the variable
-  var submission = new Submission({
-    // Extract source code, language, and chosen problemset to create a new submission
-    language: userData.language,
-    testcase: userData.testcase,
-    code: userData.code
-  });
-  await submission.save()
-  .then(item => {
+    userData = req.body;
+    code = userData.code;
+    
+    // TODO: use the code to run the code and store the status in the variable
+    var submission = new Submission({
+        // Extract source code, language, and chosen problemset to create a new submission
+        language: userData.language,
+        testcase: userData.testcase,
+        code: userData.code
+    });
+    await submission.save();
+    
     // Write the source code
     var srcPath = "/root/submissions/" + item._id + "/";
+    fs.makeDirSync(srcPath);
 
     switch (item.language) {
-        case "python3":
+        case "python" | "python3":
             srcPath += "main.py";
             break;
         case "java":
@@ -235,55 +236,17 @@ app.post("/problem/execute/", async function(req, res) { // Program execution AP
             return;
     }
 
-    fs.writeFile(srcPath, item.code, function(err) {
+    fs.writeFile(srcPath, submission.code, function(err) {
         if (err) {
             console.log(err);
             return;
         }
     });
 
-  })
-  .then( gradeSubmission(submission._id) )
-  .then(verdict => {
-    /*
-    var verdict = "";
-    switch (verdict) {
-        case 0:
-            verdict = "Accepted!";
-            break;
-        case 1:
-            verdict = "Compilation error.\n";
-
-            // Add compiler error log
-            verdict += fs.readFileSync("/root/submissions/" + submission._id + "/compile.log").toString("utf-8");
-            break;
-        case 2:
-            // Return runtime error message
-            verdict = "Runtime error.\n";
-            verdict += fs.readFileSync("/root/submissions/" + submission._id + "/stderr_output.txt").toString("utf-8");            
-            break;
-        case 3:
-            // Return diff output
-            verdict = "Wrong answer. Expected output is shown on the left column, your actual output on the right.\n";
-            verdict += fs.readFileSync("/root/submissions/" + submission_id + "/diff_output.txt").toString("utf-8");
-            break;
-        case 4:
-            verdict = "Time limit exceeded.";
-            break;
-        case 5:
-            verdict = "Memory limit exceeded";
-            break;
-        default:
-            console.error("ERROR: Verdict " + verdict + " not supported or may have been misconfigured.");
-            break;
-    };
-    */
-    return verdict;
-  })
-  .catch(err => {
-    console.error(err);
-  });
+    var verdict = await gradeSubmission(submission._id);
+    res.send(verdict);
 });
+
 
 // Add Problem API
 
@@ -327,41 +290,15 @@ const GRADER_PATH = "/root/src/grader/grader.sh ";
  * 5 = Memory limit exceeded
  */
 async function gradeSubmission(submissionId) {
-    /*
-    await Submission.findById(submissionId, function(err, submission) {
-        if (err) {
-            console.log(err);
-            return;
-        }
-
-        var submissionArg = "-s " + submission._id + " ";
-        var languageArg = "-l " + submission.language + " ";
-        var testcaseArg = "-T " + submission.testcase + " ";
-
-        exec(GRADER_PATH + submissionArg + languageArg + testcaseArg, (err, stdout, stderr) => {
-            if (err) {
-                console.error(err);
-                return;
-            }
-            return stdout;
-        }
-    )})
-    .then(verdict => {
-        return Number(verdict)
-    })
-    .catch(err => {
-        console.error(err);
-    });  
-    */
-
+    
     try {
-        await Submission.findById(submissionId);
+        var submission = await Submission.findById(submissionId);
 
         var submissionArg = "-s " + submission._id + " ";
         var languageArg = "-l " + submission.language + " ";
         var testcaseArg = "-T " + submission.testcase + " ";
         
-        exec(GRADER_PATH + submissionArg + languageArg + testcaseArg, (err, stdout, stderr) => {
+        child_process.exec(GRADER_PATH + submissionArg + languageArg + testcaseArg, (err, stdout, stderr) => {
             if (err) {
                 return err;
             }
